@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>REELX — Снимай то, что уже работает</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+/* INDEX ONLY */
+.hero {
+  height: 100vh; min-height: 640px;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center;
+  padding: 58px 48px 0;
+  position: relative; overflow: hidden;
+}
+/* ambient glow */
+.hero::before {
+  content: '';
+  position: absolute; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse 55% 45% at 50% 0%, rgba(207,192,176,0.07) 0%, transparent 65%),
+    radial-gradient(ellipse 35% 35% at 80% 70%, rgba(207,192,176,0.04) 0%, transparent 55%);
+}
+/* subtle grid */
+.hero::after {
+  content: '';
+  position: absolute; inset: 0; pointer-events: none;
+  background-image: linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 100%);
+}
+.hero-inner { position: relative; z-index: 1; width: 100%; max-width: 700px; }
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 5px 14px 5px 9px;
+  background: var(--bg2); border: 1px solid var(--line2);
+  border-radius: 100px; font-size: 0.71rem; color: var(--text2);
+  letter-spacing: 0.04em; margin-bottom: 36px;
+  animation: fadeUp 0.7s ease both;
+}
+.hero-dot {
+  width: 16px; height: 16px; border-radius: 50%;
+  background: var(--ag); display: flex; align-items: center; justify-content: center;
+}
+.hero-dot::after {
+  content: ''; width: 5px; height: 5px; border-radius: 50%;
+  background: var(--ap); animation: pulse 2s ease infinite;
+}
+.hero-h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(3rem, 6.5vw, 5.8rem);
+  line-height: 1.06; letter-spacing: -0.01em;
+  animation: fadeUp 0.7s 0.1s ease both;
+}
+.hero-h1 em { font-style: italic; color: var(--ap); }
+.hero-sub {
+  font-size: clamp(0.88rem, 1.4vw, 1rem);
+  color: var(--text2); line-height: 1.75;
+  max-width: 440px; margin: 20px auto 0;
+  animation: fadeUp 0.7s 0.2s ease both;
+}
+.hero-input-wrap {
+  margin-top: 40px; width: 100%; max-width: 540px; margin-left: auto; margin-right: auto;
+  animation: fadeUp 0.7s 0.3s ease both;
+}
+.hero-note {
+  margin-top: 13px;
+  font-size: 0.72rem; color: var(--text2);
+  display: flex; align-items: center; justify-content: center; gap: 12px;
+  animation: fadeUp 0.7s 0.4s ease both;
+}
+.hero-note-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--text2); opacity: 0.35; }
+/* pipeline icons row */
+.hero-pipe {
+  display: flex; align-items: center; justify-content: center;
+  margin-top: 52px; gap: 0;
+  animation: fadeUp 0.7s 0.5s ease both;
+}
+.hp-step { display: flex; flex-direction: column; align-items: center; gap: 7px; }
+.hp-icon {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--bg2); border: 1px solid var(--line2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.82rem; color: var(--text2);
+  transition: all 0.4s; position: relative;
+}
+.hp-icon.active {
+  background: var(--ag); border-color: rgba(207,192,176,0.35);
+  color: var(--ap); box-shadow: 0 0 20px rgba(207,192,176,0.07);
+}
+.hp-icon.active::after {
+  content: ''; position: absolute; inset: -4px; border-radius: 50%;
+  border: 1px solid rgba(207,192,176,0.15); animation: ripple 2s ease infinite;
+}
+.hp-label { font-size: 0.6rem; color: var(--text2); white-space: nowrap; }
+.hp-line { width: 34px; height: 1px; background: var(--line2); flex-shrink: 0; }
+/* scroll hint */
+.scroll-hint {
+  position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 7px;
+  animation: fadeUp 0.7s 0.9s ease both;
+}
+.scroll-line {
+  width: 1px; height: 34px;
+  background: linear-gradient(to bottom, var(--line2), transparent);
+  animation: scanline 2.2s ease infinite;
+}
+@keyframes scanline {
+  0%{transform:scaleY(0);transform-origin:top}
+  50%{transform:scaleY(1);transform-origin:top}
+  51%{transform:scaleY(1);transform-origin:bottom}
+  100%{transform:scaleY(0);transform-origin:bottom}
+}
+.scroll-label { font-size: 0.58rem; color: var(--text2); letter-spacing: 0.12em; text-transform: uppercase; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="index.html" class="nav-logo">REEL<em>X</em></a>
+  <ul class="nav-links">
+    <li><a href="how.html">Как работает</a></li>
+    <li><a href="trends.html">Тренды</a></li>
+    <li><a href="pricing.html">Тарифы</a></li>
+    <li><a href="how.html#faq">FAQ</a></li>
+  </ul>
+  <div class="nav-right">
+    <a href="login.html" class="btn btn-ghost btn-sm">Войти</a>
+    <a href="login.html" class="btn btn-primary btn-sm">Начать бесплатно</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">
+      <div class="hero-dot"></div>
+      AI-анализ вирусного контента
+    </div>
+
+    <h1 class="hero-h1">
+      Снимай то,<br>что уже <em>работает</em>
+    </h1>
+
+    <p class="hero-sub">
+      Вставь ссылку и получи покадровый разбор, транскрипцию и готовый сценарий для адаптации.
+    </p>
+
+    <div class="hero-input-wrap">
+      <div class="input-row">
+        <input id="hero-url" type="text" placeholder="Вставь ссылку на рилс, тикток или шортс…">
+        <button class="btn btn-primary" onclick="startAnalyze()">Разобрать →</button>
+      </div>
+    </div>
+
+    <div class="hero-note">
+      <span>5 анализов бесплатно</span>
+      <div class="hero-note-dot"></div>
+      <span>Без карты</span>
+      <div class="hero-note-dot"></div>
+      <span>Instagram · TikTok · YouTube</span>
+    </div>
+
+    <div class="hero-pipe">
+      <div class="hp-step">
+        <div class="hp-icon" id="pi0">🔗</div>
+        <div class="hp-label">Ссылка</div>
+      </div>
+      <div class="hp-line"></div>
+      <div class="hp-step">
+        <div class="hp-icon active" id="pi1">⬇</div>
+        <div class="hp-label">Загрузка</div>
+      </div>
+      <div class="hp-line"></div>
+      <div class="hp-step">
+        <div class="hp-icon" id="pi2">🎞</div>
+        <div class="hp-label">Кадры</div>
+      </div>
+      <div class="hp-line"></div>
+      <div class="hp-step">
+        <div class="hp-icon" id="pi3">🎙</div>
+        <div class="hp-label">Речь</div>
+      </div>
+      <div class="hp-line"></div>
+      <div class="hp-step">
+        <div class="hp-icon" id="pi4">🧠</div>
+        <div class="hp-label">Анализ</div>
+      </div>
+      <div class="hp-line"></div>
+      <div class="hp-step">
+        <div class="hp-icon" id="pi5">✍</div>
+        <div class="hp-label">Сценарий</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    <div class="scroll-label">скролл</div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-logo">REEL<em>X</em></div>
+  <div class="footer-links">
+    <a href="pricing.html">Тарифы</a>
+    <a href="#">Оферта</a>
+    <a href="#">Конфиденциальность</a>
+    <a href="#">Возврат</a>
+    <a href="#">Куки</a>
+    <a href="mailto:support@reelx.app">support@reelx.app</a>
+  </div>
+  <div class="footer-copy">© 2025 REELX · ИП</div>
+</footer>
+
+<script src="shared.js"></script>
+<script>
+// pipeline animation
+var pis = document.querySelectorAll('.hp-icon');
+var ai = 1;
+setInterval(function() {
+  pis.forEach(function(p) { p.classList.remove('active'); });
+  ai = (ai + 1) % pis.length;
+  pis[ai].classList.add('active');
+}, 1100);
+
+function startAnalyze() {
+  var url = document.getElementById('hero-url').value.trim();
+  if (!url) { document.getElementById('hero-url').focus(); return; }
+  window.location.href = 'analyze.html';
+}
+document.getElementById('hero-url').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') startAnalyze();
+});
+</script>
+</body>
+</html>

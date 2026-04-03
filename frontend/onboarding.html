@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>REELX — Настройка</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+body { display: grid; place-items: center; min-height: 100vh; padding: 32px 20px; }
+.ob { width: 100%; max-width: 620px; }
+.ob-logo { display: block; text-align: center; font-family: 'DM Serif Display',serif; font-size: 1.2rem; letter-spacing: 0.14em; color: var(--text); text-decoration: none; margin-bottom: 40px; }
+.ob-logo em { font-style: normal; color: var(--ap); }
+.ob-progress { height: 2px; background: var(--line); border-radius: 1px; margin-bottom: 40px; overflow: hidden; }
+.ob-bar { height: 100%; background: linear-gradient(90deg, var(--ap), var(--ahl)); border-radius: 1px; transition: width 0.5s cubic-bezier(0.23,1,0.32,1); }
+.ob-steps { display: flex; justify-content: center; gap: 0; margin-bottom: 40px; }
+.ob-step { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.ob-dot { width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--line2); display: flex; align-items: center; justify-content: center; font-size: 0.72rem; color: var(--text2); transition: all 0.3s; }
+.ob-dot.active { background: var(--ag); border-color: var(--ab); color: var(--ap); }
+.ob-dot.done { background: rgba(74,222,128,0.08); border-color: rgba(74,222,128,0.3); color: #4ade80; }
+.ob-lbl { font-size: 0.6rem; color: var(--text2); }
+.ob-step.active .ob-lbl { color: var(--ap); }
+.ob-step-line { width: 40px; height: 1px; background: var(--line2); margin-bottom: 14px; }
+.ob-title { font-family: 'DM Serif Display',serif; font-size: 2rem; text-align: center; line-height: 1.1; margin-bottom: 8px; }
+.ob-title em { font-style: italic; color: var(--ap); }
+.ob-sub { font-size: 0.84rem; color: var(--text2); text-align: center; line-height: 1.6; margin-bottom: 32px; }
+.ob-screen { display: none; }
+.ob-screen.show { display: block; }
+.niches { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 28px; }
+.niche { padding: 16px 12px; background: var(--bg1); border: 1px solid var(--line); border-radius: 10px; cursor: pointer; text-align: center; transition: all 0.2s; }
+.niche:hover { border-color: var(--line2); }
+.niche.on { background: var(--ag); border-color: var(--ab); }
+.niche-ico { font-size: 1.4rem; margin-bottom: 6px; }
+.niche-name { font-size: 0.78rem; font-weight: 500; }
+.niche-sub { font-size: 0.64rem; color: var(--text2); margin-top: 2px; }
+.platforms { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 28px; }
+.plat { padding: 22px 16px; background: var(--bg1); border: 1px solid var(--line); border-radius: 10px; cursor: pointer; text-align: center; transition: all 0.2s; }
+.plat:hover { border-color: var(--line2); }
+.plat.on { background: var(--ag); border-color: var(--ab); }
+.plat-ico { font-size: 1.8rem; margin-bottom: 8px; }
+.plat-name { font-size: 0.85rem; font-weight: 500; }
+.goals { display: flex; flex-direction: column; gap: 8px; margin-bottom: 28px; }
+.goal { display: flex; align-items: center; gap: 14px; padding: 16px 18px; background: var(--bg1); border: 1px solid var(--line); border-radius: 10px; cursor: pointer; transition: all 0.2s; }
+.goal:hover { border-color: var(--line2); }
+.goal.on { background: var(--ag); border-color: var(--ab); }
+.goal-ico { font-size: 1.2rem; flex-shrink: 0; }
+.goal-t strong { font-size: 0.85rem; display: block; margin-bottom: 2px; }
+.goal-t span { font-size: 0.75rem; color: var(--text2); }
+.ob-btn { width: 100%; height: 50px; background: var(--ahl); color: #0c0c0e; border: none; border-radius: 10px; font-size: 0.88rem; font-weight: 600; font-family: inherit; cursor: pointer; transition: all 0.2s; }
+.ob-btn:hover { background: #f5ede5; transform: translateY(-1px); }
+.ob-skip { display: block; text-align: center; margin-top: 12px; font-size: 0.76rem; color: var(--text2); cursor: pointer; transition: color 0.2s; background: none; border: none; font-family: inherit; width: 100%; }
+.ob-skip:hover { color: var(--text); }
+</style>
+</head>
+<body>
+
+<div class="ob">
+  <a href="index.html" class="ob-logo">REEL<em>X</em></a>
+
+  <div class="ob-progress"><div class="ob-bar" id="ob-bar" style="width:33%"></div></div>
+
+  <div class="ob-steps">
+    <div class="ob-step active" id="os1"><div class="ob-dot active" id="od1">1</div><div class="ob-lbl">Ниши</div></div>
+    <div class="ob-step-line"></div>
+    <div class="ob-step" id="os2"><div class="ob-dot" id="od2">2</div><div class="ob-lbl">Платформа</div></div>
+    <div class="ob-step-line"></div>
+    <div class="ob-step" id="os3"><div class="ob-dot" id="od3">3</div><div class="ob-lbl">Цель</div></div>
+  </div>
+
+  <!-- SC1 -->
+  <div class="ob-screen show" id="sc1">
+    <div class="ob-title">Выбери свои <em>ниши</em></div>
+    <div class="ob-sub">Мы подберём тренды и адаптируем сценарии под твои темы. Можно выбрать несколько.</div>
+    <div class="niches">
+      <div class="niche toggle-btn" onclick="this.classList.toggle('on')"><div class="niche-ico">💰</div><div class="niche-name">Бизнес</div><div class="niche-sub">Деньги, карьера</div></div>
+      <div class="niche on toggle-btn" onclick="this.classList.toggle('on')"><div class="niche-ico">💄</div><div class="niche-name">Бьюти</div><div class="niche-sub">Уход, макияж</div></div>
+      <div class="niche toggle-btn" onclick="this.classList.toggle('on')"><div class="niche-ico">💪</div><div class="niche-name">Фитнес</div><div class="niche-sub">Спорт, здоровье</div></div>
+      <div class="niche toggle-btn" onclick="this.classList.toggle('on')"><div class="niche-ico">🍕</div><div class="niche-name">Еда</div><div class="niche-sub">Рецепты, кафе</div></div>
+      <div class="niche toggle-btn" onclick="this.classList.toggle('on')"><div class="niche-ico">🧠</div><div class="niche-name">Психология</div><div class="niche-sub">Саморазвитие</div></div>
+      <div class="niche toggle-btn" onclick="this.classList.toggle('on')"><div class="niche-ico">👗</div><div class="niche-name">Мода</div><div class="niche-sub">Стиль, луки</div></div>
+      <div class="niche toggle-btn" onclick="this.classList.toggle('on')"><div class="niche-ico">🤖</div><div class="niche-name">Tech & AI</div><div class="niche-sub">Технологии</div></div>
+      <div class="niche toggle-btn" onclick="this.classList.toggle('on')"><div class="niche-ico">✈️</div><div class="niche-name">Путешествия</div><div class="niche-sub">Трипы, места</div></div>
+      <div class="niche toggle-btn" onclick="this.classList.toggle('on')"><div class="niche-ico">😂</div><div class="niche-name">Юмор</div><div class="niche-sub">Развлечения</div></div>
+    </div>
+    <button class="ob-btn" onclick="goStep(2)">Далее →</button>
+    <button class="ob-skip" onclick="goStep(2)">Пропустить</button>
+  </div>
+
+  <!-- SC2 -->
+  <div class="ob-screen" id="sc2">
+    <div class="ob-title">Где ты <em>снимаешь?</em></div>
+    <div class="ob-sub">Выбери основную платформу — мы оптимизируем сценарии под её формат.</div>
+    <div class="platforms">
+      <div class="plat on" onclick="pickOne(this,'.plat')"><div class="plat-ico">📷</div><div class="plat-name">Instagram</div></div>
+      <div class="plat" onclick="pickOne(this,'.plat')"><div class="plat-ico">♪</div><div class="plat-name">TikTok</div></div>
+      <div class="plat" onclick="pickOne(this,'.plat')"><div class="plat-ico">▶</div><div class="plat-name">YouTube Shorts</div></div>
+    </div>
+    <button class="ob-btn" onclick="goStep(3)">Далее →</button>
+    <button class="ob-skip" onclick="goStep(3)">Пропустить</button>
+  </div>
+
+  <!-- SC3 -->
+  <div class="ob-screen" id="sc3">
+    <div class="ob-title">Какая твоя <em>главная цель?</em></div>
+    <div class="ob-sub">Поможем сфокусировать сценарии на нужном результате.</div>
+    <div class="goals">
+      <div class="goal on" onclick="pickOne(this,'.goal')"><div class="goal-ico">📈</div><div class="goal-t"><strong>Набрать подписчиков</strong><span>Хочу расти быстрее и выйти в рекомендации</span></div></div>
+      <div class="goal" onclick="pickOne(this,'.goal')"><div class="goal-ico">💸</div><div class="goal-t"><strong>Монетизировать блог</strong><span>Продавать продукты, услуги или рекламу</span></div></div>
+      <div class="goal" onclick="pickOne(this,'.goal')"><div class="goal-ico">🎨</div><div class="goal-t"><strong>Развивать личный бренд</strong><span>Стать узнаваемым экспертом в нише</span></div></div>
+      <div class="goal" onclick="pickOne(this,'.goal')"><div class="goal-ico">🏢</div><div class="goal-t"><strong>Продвигать бизнес</strong><span>Привлекать клиентов через контент</span></div></div>
+    </div>
+    <button class="ob-btn" onclick="window.location.href='dashboard.html'">Начать работу →</button>
+  </div>
+</div>
+
+<script src="shared.js"></script>
+<script>
+function goStep(n) {
+  document.querySelectorAll('.ob-screen').forEach(function(s){s.classList.remove('show');});
+  document.getElementById('sc'+n).classList.add('show');
+  [1,2,3].forEach(function(i){
+    var dot = document.getElementById('od'+i);
+    var step = document.getElementById('os'+i);
+    dot.className = 'ob-dot';
+    step.className = 'ob-step';
+    if(i < n) { dot.classList.add('done'); dot.textContent = '✓'; }
+    else if(i === n) { dot.classList.add('active'); step.classList.add('active'); dot.textContent = i; }
+    else { dot.textContent = i; }
+  });
+  document.getElementById('ob-bar').style.width = (n/3*100) + '%';
+}
+function pickOne(el, sel) {
+  document.querySelectorAll(sel).forEach(function(e){e.classList.remove('on');});
+  el.classList.add('on');
+}
+</script>
+
+<footer class="footer">
+  <div class="footer-logo">REEL<em>X</em></div>
+  <div class="footer-links">
+    <a href="pricing.html">Тарифы</a>
+    <a href="#">Оферта</a>
+    <a href="#">Конфиденциальность</a>
+    <a href="#">Куки</a>
+    <a href="mailto:support@reelx.app">support@reelx.app</a>
+  </div>
+  <div class="footer-copy">© 2025 REELX · ИП</div>
+</footer>
+</body>
+</html>

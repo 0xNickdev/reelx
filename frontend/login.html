@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>REELX — Войти</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+body { display: grid; place-items: center; min-height: 100vh; padding: 24px; }
+.auth-wrap { width: 100%; max-width: 400px; }
+.auth-logo { display: block; text-align: center; font-family: 'DM Serif Display',serif; font-size: 1.4rem; letter-spacing: 0.14em; color: var(--text); text-decoration: none; margin-bottom: 36px; }
+.auth-logo em { font-style: normal; color: var(--ap); }
+.auth-card { background: var(--bg1); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+.auth-tabs { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid var(--line); }
+.auth-tab { padding: 14px; text-align: center; font-size: 0.82rem; color: var(--text2); cursor: pointer; background: transparent; border: none; font-family: inherit; transition: all 0.2s; }
+.auth-tab.on { color: var(--text); background: var(--bg2); }
+.auth-body { padding: 30px; }
+.auth-trial { background: var(--ag); border: 1px solid var(--ab); border-radius: 8px; padding: 12px 16px; margin-bottom: 22px; text-align: center; font-size: 0.78rem; color: var(--text2); line-height: 1.5; }
+.auth-trial strong { color: var(--ap); display: block; font-size: 0.86rem; margin-bottom: 2px; }
+.auth-field { margin-bottom: 14px; }
+.auth-label { font-size: 0.72rem; color: var(--text2); letter-spacing: 0.04em; margin-bottom: 6px; display: block; }
+.auth-input { width: 100%; height: 44px; background: var(--bg2); border: 1px solid var(--line2); border-radius: 8px; padding: 0 14px; font-size: 0.85rem; color: var(--text); font-family: inherit; outline: none; transition: border-color 0.2s; }
+.auth-input:focus { border-color: rgba(207,192,176,0.4); }
+.auth-input::placeholder { color: var(--text2); }
+.auth-submit { width: 100%; height: 46px; background: var(--ahl); color: #0c0c0e; border: none; border-radius: 10px; font-size: 0.88rem; font-weight: 600; font-family: inherit; cursor: pointer; transition: all 0.2s; margin-top: 6px; }
+.auth-submit:hover { background: #f5ede5; transform: translateY(-1px); }
+.auth-divider { display: flex; align-items: center; gap: 12px; margin: 18px 0; font-size: 0.72rem; color: var(--text2); }
+.auth-divider::before,.auth-divider::after { content:''; flex:1; height:1px; background:var(--line); }
+.auth-tg { width: 100%; height: 44px; background: var(--bg2); border: 1px solid var(--line2); border-radius: 10px; font-size: 0.83rem; color: var(--text2); font-family: inherit; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s; }
+.auth-tg:hover { border-color: rgba(96,165,250,0.35); color: #60a5fa; }
+.auth-note { font-size: 0.72rem; color: var(--text2); text-align: center; margin-top: 18px; line-height: 1.5; }
+.auth-note a { color: var(--ap); text-decoration: none; }
+.bg-glow { position: fixed; inset: 0; pointer-events: none; background: radial-gradient(ellipse 40% 50% at 50% 50%, rgba(207,192,176,0.04) 0%, transparent 70%); }
+</style>
+</head>
+<body>
+<div class="bg-glow"></div>
+
+<div class="auth-wrap">
+  <a href="index.html" class="auth-logo">REEL<em>X</em></a>
+
+  <div class="auth-card">
+    <div class="auth-tabs">
+      <button class="auth-tab on" onclick="switchTab('login',this)">Войти</button>
+      <button class="auth-tab" onclick="switchTab('reg',this)">Регистрация</button>
+    </div>
+
+    <!-- LOGIN -->
+    <div class="auth-body" id="tab-login">
+      <div class="auth-field">
+        <label class="auth-label">Email</label>
+        <input class="auth-input" type="email" placeholder="you@example.com">
+      </div>
+      <div class="auth-field">
+        <label class="auth-label">Пароль</label>
+        <input class="auth-input" type="password" placeholder="••••••••">
+      </div>
+      <button class="auth-submit" onclick="window.location.href='dashboard.html'">Войти →</button>
+      <div class="auth-divider">или</div>
+      <button class="auth-tg">✈️ Войти через Telegram</button>
+      <div class="auth-note"><a href="#">Забыли пароль?</a></div>
+    </div>
+
+    <!-- REGISTER -->
+    <div class="auth-body" id="tab-reg" style="display:none">
+      <div class="auth-trial">
+        <strong>5 анализов бесплатно</strong>
+        Без карты · Отмена в любой момент
+      </div>
+      <div class="auth-field">
+        <label class="auth-label">Имя</label>
+        <input class="auth-input" type="text" placeholder="Как тебя зовут?">
+      </div>
+      <div class="auth-field">
+        <label class="auth-label">Email</label>
+        <input class="auth-input" type="email" placeholder="you@example.com">
+      </div>
+      <div class="auth-field">
+        <label class="auth-label">Пароль</label>
+        <input class="auth-input" type="password" placeholder="Минимум 8 символов">
+      </div>
+      <button class="auth-submit" onclick="window.location.href='onboarding.html'">Создать аккаунт →</button>
+      <div class="auth-divider">или</div>
+      <button class="auth-tg">✈️ Войти через Telegram</button>
+      <div class="auth-note">Регистрируясь, вы соглашаетесь с <a href="#">офертой</a> и <a href="#">политикой конфиденциальности</a></div>
+    </div>
+  </div>
+</div>
+
+<script src="shared.js"></script>
+<script>
+function switchTab(tab, btn) {
+  document.querySelectorAll('.auth-tab').forEach(function(t){t.classList.remove('on');});
+  btn.classList.add('on');
+  document.getElementById('tab-login').style.display = tab==='login' ? 'block' : 'none';
+  document.getElementById('tab-reg').style.display = tab==='reg' ? 'block' : 'none';
+}
+</script>
+
+<footer class="footer">
+  <div class="footer-logo">REEL<em>X</em></div>
+  <div class="footer-links">
+    <a href="pricing.html">Тарифы</a>
+    <a href="#">Оферта</a>
+    <a href="#">Конфиденциальность</a>
+    <a href="#">Куки</a>
+    <a href="mailto:support@reelx.app">support@reelx.app</a>
+  </div>
+  <div class="footer-copy">© 2025 REELX · ИП</div>
+</footer>
+</body>
+</html>

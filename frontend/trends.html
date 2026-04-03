@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>REELX — Тренды</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+.page { padding: 78px 48px 64px; }
+.page-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 28px; flex-wrap: wrap; gap: 14px; }
+.page-title { font-family: 'DM Serif Display', serif; font-size: 2rem; }
+.page-sub { font-size: 0.82rem; color: var(--text2); margin-top: 4px; }
+
+/* FILTERS */
+.filters-bar { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; flex-wrap: wrap; }
+.f-sep { width: 1px; height: 20px; background: var(--line2); margin: 0 3px; }
+.f-btn {
+  height: 32px; padding: 0 13px;
+  background: transparent; border: 1px solid var(--line2); border-radius: 7px;
+  font-size: 0.73rem; color: var(--text2); cursor: pointer;
+  font-family: inherit; letter-spacing: 0.02em; transition: all 0.18s;
+  white-space: nowrap;
+}
+.f-btn:hover { border-color: rgba(207,192,176,0.3); color: var(--text); }
+.f-btn.on { background: var(--ag); border-color: rgba(207,192,176,0.3); color: var(--ap); }
+
+.filters-bar2 { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 8px; }
+.search-box { position: relative; flex: 1; max-width: 380px; }
+.search-box input {
+  width: 100%; height: 34px; background: var(--bg2); border: 1px solid var(--line2);
+  border-radius: 8px; padding: 0 13px 0 34px; font-size: 0.78rem;
+  color: var(--text); font-family: inherit; outline: none; transition: border-color 0.2s;
+}
+.search-box input:focus { border-color: rgba(207,192,176,0.3); }
+.search-box input::placeholder { color: var(--text2); }
+.search-ico { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); font-size: 0.75rem; color: var(--text2); }
+.sort-group { display: flex; gap: 4px; }
+
+/* CARDS GRID */
+.cards-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
+
+/* CARD */
+.trend-card {
+  background: var(--bg1); border: 1px solid var(--line);
+  border-radius: 10px; overflow: hidden; cursor: pointer;
+  transition: border-color 0.22s, transform 0.22s;
+  position: relative;
+}
+.trend-card:hover { border-color: var(--line2); transform: translateY(-3px); }
+.trend-card:hover .tc-overlay { opacity: 1; transform: translateY(0); }
+
+.tc-thumb {
+  aspect-ratio: 9/16; position: relative; overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+}
+.tc-thumb-emoji { font-size: 3rem; opacity: 0.12; }
+.tc-top { position: absolute; top: 10px; left: 10px; right: 10px; display: flex; justify-content: space-between; align-items: flex-start; }
+.tc-plat {
+  display: flex; align-items: center; gap: 5px;
+  background: rgba(0,0,0,0.6); backdrop-filter: blur(6px);
+  border: 1px solid rgba(255,255,255,0.08); border-radius: 20px;
+  padding: 3px 9px; font-size: 0.6rem; color: rgba(255,255,255,0.6);
+}
+.tc-plat-dot { width: 8px; height: 8px; border-radius: 50%; }
+.dot-ig { background: linear-gradient(135deg,#f09433,#e6683c,#dc2743,#bc1888); }
+.dot-tt { background: linear-gradient(135deg,#010101,#69C9D0); }
+.dot-yt { background: #ff0000; }
+.tc-right { display: flex; gap: 6px; align-items: center; }
+.tc-fav {
+  width: 28px; height: 28px; background: rgba(0,0,0,0.6); backdrop-filter: blur(6px);
+  border: 1px solid rgba(255,255,255,0.08); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.72rem; cursor: pointer; transition: all 0.2s;
+}
+.tc-fav:hover { border-color: rgba(248,113,113,0.5); }
+.tc-fav.liked { color: #f87171; }
+.tc-rank {
+  width: 24px; height: 24px; background: rgba(0,0,0,0.6); backdrop-filter: blur(6px);
+  border: 1px solid rgba(255,255,255,0.08); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.72rem; font-weight: 600; color: rgba(255,255,255,0.5);
+}
+.tc-bottom {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 28px 12px 12px;
+  background: linear-gradient(to top, rgba(0,0,0,0.75), transparent);
+}
+.tc-views { font-family: 'DM Serif Display', serif; font-size: 1.1rem; color: #fff; }
+.tc-time { font-size: 0.62rem; color: rgba(255,255,255,0.45); margin-top: 1px; }
+.tc-xf {
+  position: absolute; bottom: 12px; right: 12px;
+  background: var(--ahl); color: #0c0c0e;
+  font-size: 0.6rem; font-weight: 700; padding: 2px 8px; border-radius: 4px;
+}
+.tc-overlay {
+  position: absolute; inset: 0;
+  background: rgba(12,12,14,0.72); backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; transition: all 0.25s; transform: translateY(6px);
+}
+.tc-overlay-btn {
+  background: var(--ahl); color: #0c0c0e; border: none;
+  border-radius: 8px; padding: 10px 22px;
+  font-size: 0.78rem; font-weight: 600; font-family: inherit;
+  cursor: pointer; transition: background 0.2s;
+}
+.tc-overlay-btn:hover { background: #f5ede5; }
+.tc-info { padding: 12px 14px; border-top: 1px solid var(--line); }
+.tc-info-row { display: flex; justify-content: space-between; align-items: flex-start; }
+.tc-author { font-size: 0.8rem; font-weight: 500; }
+.tc-niche { font-size: 0.68rem; color: var(--text2); }
+.tc-cr { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+.tc-cr-val { font-size: 0.68rem; color: var(--text2); }
+.tc-xf-badge {
+  background: var(--ag); border: 1px solid var(--ab);
+  color: var(--ap); font-size: 0.65rem; font-weight: 600;
+  padding: 2px 8px; border-radius: 4px;
+}
+/* locked card */
+.tc-locked {
+  aspect-ratio: 9/16; background: var(--bg2);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 10px;
+}
+.tc-lock-ico { font-size: 1.2rem; opacity: 0.2; }
+.tc-lock-text { font-size: 0.72rem; color: var(--text2); text-align: center; padding: 0 16px; line-height: 1.5; }
+.tc-lock-cta { font-size: 0.72rem; color: var(--ap); text-decoration: none; border-bottom: 1px solid rgba(207,192,176,0.3); }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="nav-logo">REEL<em>X</em></a>
+  <ul class="nav-links">
+    <li><a href="how.html">Как работает</a></li>
+    <li><a href="trends.html" class="active">Тренды</a></li>
+    <li><a href="pricing.html">Тарифы</a></li>
+    <li><a href="how.html#faq">FAQ</a></li>
+  </ul>
+  <div class="nav-right">
+    <a href="login.html" class="btn btn-ghost btn-sm">Войти</a>
+    <a href="login.html" class="btn btn-primary btn-sm">Начать бесплатно</a>
+  </div>
+</nav>
+
+<div class="page">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Тренды</div>
+      <div class="page-sub">Рилсы, которые набирают аномально много прямо сейчас</div>
+    </div>
+    <button class="btn btn-ghost btn-sm">+ Добавить автора</button>
+  </div>
+
+  <!-- FILTERS ROW 1 -->
+  <div class="filters-bar filter-group">
+    <button class="f-btn on">Для вас</button>
+    <button class="f-btn">Мои авторы</button>
+    <button class="f-btn">Все</button>
+    <div class="f-sep"></div>
+    <button class="f-btn on">Все ниши ▾</button>
+    <div class="f-sep"></div>
+    <button class="f-btn on">Все</button>
+    <button class="f-btn">📷</button>
+    <button class="f-btn">▶</button>
+    <button class="f-btn">♪</button>
+    <div class="f-sep"></div>
+    <button class="f-btn">♡</button>
+    <div class="f-sep"></div>
+    <button class="f-btn on">Всё время</button>
+    <button class="f-btn">Сегодня</button>
+    <button class="f-btn">Неделя</button>
+    <button class="f-btn">Месяц</button>
+    <button class="f-btn">Год</button>
+  </div>
+
+  <!-- FILTERS ROW 2 -->
+  <div class="filters-bar2">
+    <div class="search-box">
+      <span class="search-ico">🔍</span>
+      <input type="text" placeholder="Поиск по авторам или нишам…">
+    </div>
+    <div class="sort-group filter-group">
+      <button class="f-btn on">Горячее</button>
+      <button class="f-btn">X-factor</button>
+      <button class="f-btn">Просмотры</button>
+      <button class="f-btn">Свежие</button>
+    </div>
+  </div>
+
+  <!-- CARDS -->
+  <div class="cards-grid">
+    <!-- 1 -->
+    <div class="trend-card" onclick="window.location.href='analyze.html'">
+      <div class="tc-thumb" style="background:linear-gradient(160deg,#1a1520,#251830)">
+        <div class="tc-thumb-emoji">🚗</div>
+        <div class="tc-top">
+          <div class="tc-plat"><div class="tc-plat-dot dot-ig"></div>Instagram</div>
+          <div class="tc-right">
+            <div class="tc-fav" onclick="event.stopPropagation();toggleFav(this)">♡</div>
+            <div class="tc-rank">1</div>
+          </div>
+        </div>
+        <div class="tc-bottom"><div class="tc-views">1.1М</div><div class="tc-time">3 дн. назад</div></div>
+        <div class="tc-xf">363.4×</div>
+      </div>
+      <div class="tc-overlay"><button class="tc-overlay-btn">Разобрать →</button></div>
+      <div class="tc-info">
+        <div class="tc-info-row"><div class="tc-author">@nikita.vell</div><div class="tc-niche">DIY</div></div>
+        <div class="tc-cr"><span class="tc-cr-val">0.0% CR</span><span class="tc-xf-badge">363.4×</span></div>
+      </div>
+    </div>
+    <!-- 2 -->
+    <div class="trend-card" onclick="window.location.href='analyze.html'">
+      <div class="tc-thumb" style="background:linear-gradient(160deg,#1c1a1a,#282424)">
+        <div class="tc-thumb-emoji">💄</div>
+        <div class="tc-top">
+          <div class="tc-plat"><div class="tc-plat-dot dot-ig"></div>Instagram</div>
+          <div class="tc-right">
+            <div class="tc-fav" onclick="event.stopPropagation();toggleFav(this)">♡</div>
+            <div class="tc-rank">2</div>
+          </div>
+        </div>
+        <div class="tc-bottom"><div class="tc-views">61.4К</div><div class="tc-time">12 ч. назад</div></div>
+        <div class="tc-xf">301.8×</div>
+      </div>
+      <div class="tc-overlay"><button class="tc-overlay-btn">Разобрать →</button></div>
+      <div class="tc-info">
+        <div class="tc-info-row"><div class="tc-author">@viktoria_hudeem</div><div class="tc-niche">Здоровье</div></div>
+        <div class="tc-cr"><span class="tc-cr-val">0.0% CR</span><span class="tc-xf-badge">301.8×</span></div>
+      </div>
+    </div>
+    <!-- 3 -->
+    <div class="trend-card" onclick="window.location.href='analyze.html'">
+      <div class="tc-thumb" style="background:linear-gradient(160deg,#191c1a,#232826)">
+        <div class="tc-thumb-emoji">🚗</div>
+        <div class="tc-top">
+          <div class="tc-plat"><div class="tc-plat-dot dot-ig"></div>Instagram</div>
+          <div class="tc-right">
+            <div class="tc-fav" onclick="event.stopPropagation();toggleFav(this)">♡</div>
+            <div class="tc-rank">3</div>
+          </div>
+        </div>
+        <div class="tc-bottom"><div class="tc-views">559.7К</div><div class="tc-time">3 дн. назад</div></div>
+        <div class="tc-xf">184.4×</div>
+      </div>
+      <div class="tc-overlay"><button class="tc-overlay-btn">Разобрать →</button></div>
+      <div class="tc-info">
+        <div class="tc-info-row"><div class="tc-author">@nikita.vell</div><div class="tc-niche">Развлечения</div></div>
+        <div class="tc-cr"><span class="tc-cr-val">0.0% CR</span><span class="tc-xf-badge">184.4×</span></div>
+      </div>
+    </div>
+    <!-- 4 -->
+    <div class="trend-card" onclick="window.location.href='analyze.html'">
+      <div class="tc-thumb" style="background:linear-gradient(160deg,#1a1a1c,#26262a)">
+        <div class="tc-thumb-emoji">🎣</div>
+        <div class="tc-top">
+          <div class="tc-plat"><div class="tc-plat-dot dot-ig"></div>Instagram</div>
+          <div class="tc-right">
+            <div class="tc-fav" onclick="event.stopPropagation();toggleFav(this)">♡</div>
+            <div class="tc-rank">4</div>
+          </div>
+        </div>
+        <div class="tc-bottom"><div class="tc-views">94.2К</div><div class="tc-time">7 дн. назад</div></div>
+        <div class="tc-xf">120.8×</div>
+      </div>
+      <div class="tc-overlay"><button class="tc-overlay-btn">Разобрать →</button></div>
+      <div class="tc-info">
+        <div class="tc-info-row"><div class="tc-author">@yevgx</div><div class="tc-niche">Другое</div></div>
+        <div class="tc-cr"><span class="tc-cr-val">0.0% CR</span><span class="tc-xf-badge">120.8×</span></div>
+      </div>
+    </div>
+    <!-- 5 -->
+    <div class="trend-card" onclick="window.location.href='analyze.html'">
+      <div class="tc-thumb" style="background:linear-gradient(160deg,#17181f,#21222e)">
+        <div class="tc-thumb-emoji">😂</div>
+        <div class="tc-top">
+          <div class="tc-plat"><div class="tc-plat-dot dot-tt"></div>TikTok</div>
+          <div class="tc-right">
+            <div class="tc-fav" onclick="event.stopPropagation();toggleFav(this)">♡</div>
+            <div class="tc-rank">5</div>
+          </div>
+        </div>
+        <div class="tc-bottom"><div class="tc-views">819К</div><div class="tc-time">5 дн. назад</div></div>
+        <div class="tc-xf">120×</div>
+      </div>
+      <div class="tc-overlay"><button class="tc-overlay-btn">Разобрать →</button></div>
+      <div class="tc-info">
+        <div class="tc-info-row"><div class="tc-author">@thestreamerscult</div><div class="tc-niche">Юмор</div></div>
+        <div class="tc-cr"><span class="tc-cr-val">0.0% CR</span><span class="tc-xf-badge">120×</span></div>
+      </div>
+    </div>
+    <!-- 6 -->
+    <div class="trend-card" onclick="window.location.href='analyze.html'">
+      <div class="tc-thumb" style="background:linear-gradient(160deg,#1a1515,#281e1e)">
+        <div class="tc-thumb-emoji">💪</div>
+        <div class="tc-top">
+          <div class="tc-plat"><div class="tc-plat-dot dot-yt"></div>YouTube</div>
+          <div class="tc-right">
+            <div class="tc-fav" onclick="event.stopPropagation();toggleFav(this)">♡</div>
+            <div class="tc-rank">6</div>
+          </div>
+        </div>
+        <div class="tc-bottom"><div class="tc-views">2.3М</div><div class="tc-time">2 дн. назад</div></div>
+        <div class="tc-xf">98.2×</div>
+      </div>
+      <div class="tc-overlay"><button class="tc-overlay-btn">Разобрать →</button></div>
+      <div class="tc-info">
+        <div class="tc-info-row"><div class="tc-author">@fitbody_pro</div><div class="tc-niche">Фитнес</div></div>
+        <div class="tc-cr"><span class="tc-cr-val">0.0% CR</span><span class="tc-xf-badge">98.2×</span></div>
+      </div>
+    </div>
+    <!-- 7 -->
+    <div class="trend-card" onclick="window.location.href='analyze.html'">
+      <div class="tc-thumb" style="background:linear-gradient(160deg,#191c1a,#232826)">
+        <div class="tc-thumb-emoji">🤖</div>
+        <div class="tc-top">
+          <div class="tc-plat"><div class="tc-plat-dot dot-tt"></div>TikTok</div>
+          <div class="tc-right">
+            <div class="tc-fav" onclick="event.stopPropagation();toggleFav(this)">♡</div>
+            <div class="tc-rank">7</div>
+          </div>
+        </div>
+        <div class="tc-bottom"><div class="tc-views">445К</div><div class="tc-time">4 дн. назад</div></div>
+        <div class="tc-xf">87.5×</div>
+      </div>
+      <div class="tc-overlay"><button class="tc-overlay-btn">Разобрать →</button></div>
+      <div class="tc-info">
+        <div class="tc-info-row"><div class="tc-author">@ai_insider</div><div class="tc-niche">Tech & AI</div></div>
+        <div class="tc-cr"><span class="tc-cr-val">0.0% CR</span><span class="tc-xf-badge">87.5×</span></div>
+      </div>
+    </div>
+    <!-- 8 LOCKED -->
+    <div class="trend-card">
+      <div class="tc-locked">
+        <div class="tc-lock-ico">🔒</div>
+        <div class="tc-lock-text">Зарегистрируйся, чтобы видеть все тренды</div>
+        <a href="login.html" class="tc-lock-cta">Начать бесплатно →</a>
+      </div>
+      <div class="tc-info">
+        <div class="tc-info-row"><div class="tc-author" style="color:var(--text2)">···</div><div class="tc-niche">Бьюти</div></div>
+        <div class="tc-cr"><span class="tc-cr-val">1.2М · 1 дн. назад</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-logo">REEL<em>X</em></div>
+  <div class="footer-links">
+    <a href="pricing.html">Тарифы</a><a href="#">Оферта</a><a href="#">Конфиденциальность</a><a href="#">Возврат</a><a href="#">Куки</a><a href="mailto:support@reelx.app">support@reelx.app</a>
+  </div>
+  <div class="footer-copy">© 2025 REELX · ИП</div>
+</footer>
+
+<script src="shared.js"></script>
+<script>
+function toggleFav(el) {
+  el.classList.toggle('liked');
+  el.textContent = el.classList.contains('liked') ? '♥' : '♡';
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>REELX — Дашборд</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+.page { padding: 78px 48px 64px; max-width: 1060px; margin: 0 auto; }
+/* trial */
+.trial-bar { background: var(--ag); border: 1px solid var(--ab); border-radius: 10px; padding: 13px 18px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; flex-wrap: wrap; gap: 10px; }
+.trial-dots { display: flex; gap: 5px; }
+.trial-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--line2); border: 1px solid var(--line2); }
+.trial-dot.used { background: var(--ap); border-color: var(--ab); }
+.trial-text { font-size: 0.82rem; color: var(--text2); }
+.trial-text strong { color: var(--ap); }
+/* greeting */
+.greet { margin-bottom: 32px; }
+.greet-name { font-family: 'DM Serif Display',serif; font-size: 2rem; line-height: 1; }
+.greet-name em { font-style: italic; color: var(--ap); }
+.greet-sub { font-size: 0.84rem; color: var(--text2); margin-top: 5px; }
+/* analyze box */
+.analyze-box { background: var(--bg1); border: 1px solid var(--line); border-radius: 12px; padding: 26px; margin-bottom: 36px; }
+.analyze-box-lbl { font-size: 0.72rem; color: var(--text2); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 12px; }
+.quick-tags { display: flex; gap: 6px; margin-top: 12px; flex-wrap: wrap; }
+.quick-tag { padding: 5px 12px; background: var(--bg2); border: 1px solid var(--line2); border-radius: 6px; font-size: 0.72rem; color: var(--text2); cursor: pointer; transition: all 0.18s; }
+.quick-tag:hover { border-color: var(--ab); color: var(--ap); }
+/* stats */
+.stats-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin-bottom: 36px; }
+.stat-card { background: var(--bg1); border: 1px solid var(--line); border-radius: 10px; padding: 20px; transition: border-color 0.2s; }
+.stat-card:hover { border-color: var(--line2); }
+.stat-val { font-family: 'DM Serif Display',serif; font-size: 2rem; line-height: 1; }
+.stat-val em { font-style: normal; color: var(--ap); }
+.stat-lbl { font-size: 0.72rem; color: var(--text2); margin-top: 5px; }
+.stat-delta { font-size: 0.68rem; color: #4ade80; margin-top: 3px; }
+/* sections */
+.dash-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.dash-head-title { font-size: 0.88rem; font-weight: 600; }
+.dash-head-link { font-size: 0.76rem; color: var(--text2); text-decoration: none; transition: color 0.2s; }
+.dash-head-link:hover { color: var(--ap); }
+/* history */
+.history-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 36px; }
+.hist-card { background: var(--bg1); border: 1px solid var(--line); border-radius: 10px; padding: 17px; cursor: pointer; text-decoration: none; display: block; transition: all 0.2s; }
+.hist-card:hover { border-color: var(--line2); transform: translateY(-2px); }
+.hist-plat { display: inline-flex; align-items: center; gap: 5px; padding: 2px 9px; background: var(--bg2); border: 1px solid var(--line2); border-radius: 5px; font-size: 0.65rem; color: var(--text3); margin-bottom: 10px; }
+.hist-title { font-size: 0.84rem; font-weight: 500; margin-bottom: 5px; line-height: 1.35; color: var(--text); }
+.hist-meta { font-size: 0.72rem; color: var(--text2); }
+.hist-stats { display: flex; gap: 12px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line); }
+.hist-stat { font-size: 0.7rem; color: var(--text2); }
+.hist-stat span { color: var(--text3); }
+.hist-new { display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 7px; min-height: 110px; border-style: dashed; }
+.hist-new-ico { font-size: 1.1rem; opacity: 0.2; }
+.hist-new-lbl { font-size: 0.77rem; color: var(--text2); }
+/* trends mini */
+.trends-mini { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; }
+.tm-card { background: var(--bg1); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; cursor: pointer; transition: all 0.2s; }
+.tm-card:hover { border-color: var(--line2); transform: translateY(-2px); }
+.tm-thumb { aspect-ratio: 16/9; background: var(--bg2); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: var(--bg4); position: relative; }
+.tm-xf { position: absolute; bottom: 6px; right: 6px; background: var(--ahl); color: #0c0c0e; font-size: 0.6rem; font-weight: 700; padding: 2px 7px; border-radius: 4px; }
+.tm-info { padding: 10px 12px; }
+.tm-author { font-size: 0.78rem; font-weight: 500; }
+.tm-meta { font-size: 0.65rem; color: var(--text2); margin-top: 2px; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="nav-logo">REEL<em>X</em></a>
+  <ul class="nav-links">
+    <li><a href="dashboard.html" class="active">Разбор</a></li>
+    <li><a href="dashboard.html">Мои видео</a></li>
+    <li><a href="trends.html">Тренды</a></li>
+  </ul>
+  <div class="nav-right">
+    <a href="pricing.html" class="btn btn-ghost btn-sm">⚡ Подписка</a>
+    <div style="width:34px;height:34px;border-radius:50%;background:var(--ag);border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;font-size:0.78rem;color:var(--ap);font-weight:600;cursor:pointer;" onclick="window.location.href='settings.html'">А</div>
+  </div>
+</nav>
+
+<div class="page">
+  <!-- Trial -->
+  <div class="trial-bar">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div class="trial-dots">
+        <div class="trial-dot used"></div><div class="trial-dot used"></div>
+        <div class="trial-dot"></div><div class="trial-dot"></div><div class="trial-dot"></div>
+      </div>
+      <div class="trial-text">Использовано <strong>2 из 5</strong> бесплатных анализов</div>
+    </div>
+    <button class="btn btn-primary btn-sm" onclick="window.location.href='pricing.html'">Подключить безлимит →</button>
+  </div>
+
+  <!-- Greeting -->
+  <div class="greet">
+    <div class="greet-name">Привет, <em>Алина</em> 👋</div>
+    <div class="greet-sub">Что разбираем сегодня?</div>
+  </div>
+
+  <!-- Analyze -->
+  <div class="analyze-box">
+    <div class="analyze-box-lbl">Новый разбор</div>
+    <div class="input-row">
+      <input id="dash-url" type="text" placeholder="Вставь ссылку на рилс, тикток или шортс…">
+      <button class="btn btn-primary" onclick="startAnalyze()">Разобрать →</button>
+    </div>
+    <div class="quick-tags">
+      <span class="quick-tag">📷 Instagram Reels</span>
+      <span class="quick-tag">♪ TikTok</span>
+      <span class="quick-tag">▶ YouTube Shorts</span>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-val">2</div><div class="stat-lbl">Анализов всего</div></div>
+    <div class="stat-card"><div class="stat-val"><em>3</em></div><div class="stat-lbl">Осталось в триале</div><div class="stat-delta">Из 5 бесплатных</div></div>
+    <div class="stat-card"><div class="stat-val">2</div><div class="stat-lbl">Сценариев создано</div></div>
+    <div class="stat-card"><div class="stat-val">0</div><div class="stat-lbl">Рефералов</div></div>
+  </div>
+
+  <!-- History -->
+  <div class="dash-head">
+    <div class="dash-head-title">Последние разборы</div>
+    <a href="#" class="dash-head-link">Смотреть все →</a>
+  </div>
+  <div class="history-grid">
+    <a href="analyze.html" class="hist-card">
+      <div class="hist-plat">📷 Instagram</div>
+      <div class="hist-title">@universalpictures · Super Mario Galaxy промо</div>
+      <div class="hist-meta">2 часа назад · 2.1М просм.</div>
+      <div class="hist-stats">
+        <div class="hist-stat"><span>7</span> хуков</div>
+        <div class="hist-stat"><span>12</span> тегов</div>
+        <div class="hist-stat"><span>7</span> кадров</div>
+      </div>
+    </a>
+    <a href="analyze.html" class="hist-card">
+      <div class="hist-plat">♪ TikTok</div>
+      <div class="hist-title">@nikita.vell · Вирусный DIY контент</div>
+      <div class="hist-meta">вчера · 1.1М просм.</div>
+      <div class="hist-stats">
+        <div class="hist-stat"><span>5</span> хуков</div>
+        <div class="hist-stat"><span>10</span> тегов</div>
+        <div class="hist-stat"><span>5</span> кадров</div>
+      </div>
+    </a>
+    <div class="hist-card hist-new">
+      <div class="hist-new-ico">+</div>
+      <div class="hist-new-lbl">Новый разбор</div>
+    </div>
+  </div>
+
+  <!-- Trends -->
+  <div class="dash-head">
+    <div class="dash-head-title">Горячие тренды сейчас</div>
+    <a href="trends.html" class="dash-head-link">Все тренды →</a>
+  </div>
+  <div class="trends-mini">
+    <div class="tm-card" onclick="window.location.href='analyze.html'">
+      <div class="tm-thumb" style="background:linear-gradient(160deg,#1a1520,#251830)">🚗<div class="tm-xf">363×</div></div>
+      <div class="tm-info"><div class="tm-author">@nikita.vell</div><div class="tm-meta">1.1М · 3 дн. назад</div></div>
+    </div>
+    <div class="tm-card" onclick="window.location.href='analyze.html'">
+      <div class="tm-thumb" style="background:linear-gradient(160deg,#1c1a1a,#282424)">💄<div class="tm-xf">301×</div></div>
+      <div class="tm-info"><div class="tm-author">@viktoria_hudeem</div><div class="tm-meta">61.4К · 12 ч. назад</div></div>
+    </div>
+    <div class="tm-card" onclick="window.location.href='analyze.html'">
+      <div class="tm-thumb" style="background:linear-gradient(160deg,#191c1a,#232826)">💪<div class="tm-xf">184×</div></div>
+      <div class="tm-info"><div class="tm-author">@nikita.vell</div><div class="tm-meta">559К · 3 дн. назад</div></div>
+    </div>
+    <div class="tm-card" onclick="window.location.href='trends.html'">
+      <div class="tm-thumb" style="background:var(--bg2);font-size:0.72rem;color:var(--text2);text-align:center;padding:0 10px;">Все тренды →</div>
+      <div class="tm-info"><div class="tm-author" style="color:var(--text2)">Viral Feed</div><div class="tm-meta">Обновляется каждые 2ч</div></div>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-logo">REEL<em>X</em></div>
+  <div class="footer-links">
+    <a href="pricing.html">Тарифы</a><a href="#">Оферта</a><a href="#">Конфиденциальность</a><a href="#">Возврат</a><a href="#">Куки</a><a href="mailto:support@reelx.app">support@reelx.app</a>
+  </div>
+  <div class="footer-copy">© 2025 REELX · ИП</div>
+</footer>
+
+<script src="shared.js"></script>
+<script>
+function startAnalyze() {
+  var url = document.getElementById('dash-url').value.trim();
+  if (!url) { document.getElementById('dash-url').focus(); return; }
+  window.location.href = 'analyze.html';
+}
+document.getElementById('dash-url').addEventListener('keydown', function(e){ if(e.key==='Enter') startAnalyze(); });
+</script>
+</body>
+</html>

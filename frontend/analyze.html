@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>REELX — Разбор</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+/* PROCESSING */
+#processing { position:fixed;inset:0;background:var(--bg);z-index:300;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;transition:opacity 0.6s,visibility 0.6s; }
+#processing.done { opacity:0;visibility:hidden; }
+.proc-status { display:flex;align-items:center;gap:10px;font-size:0.88rem;color:var(--text2);margin-bottom:44px; }
+.proc-dot { width:8px;height:8px;border-radius:50%;background:var(--ap);animation:pulse 1.5s ease infinite; }
+.proc-pct { font-family:'DM Serif Display',serif;font-size:1.1rem;color:var(--ap); }
+.pipeline { display:flex;align-items:center; }
+.pl-step { display:flex;flex-direction:column;align-items:center;gap:9px; }
+.pl-icon { width:50px;height:50px;border-radius:50%;background:var(--bg2);border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:var(--text2);transition:all 0.5s;position:relative; }
+.pl-icon.done { background:rgba(74,222,128,0.07);border-color:rgba(74,222,128,0.3);color:#4ade80; }
+.pl-icon.active { background:var(--ag);border-color:var(--ab);color:var(--ap);box-shadow:0 0 24px rgba(207,192,176,0.07); }
+.pl-icon.active::before { content:'';position:absolute;inset:-5px;border-radius:50%;border:1px solid rgba(207,192,176,0.15);animation:ripple 2s ease infinite; }
+.pl-lbl { font-size:0.65rem;color:var(--text2);white-space:nowrap;text-align:center;max-width:70px;line-height:1.3;transition:color 0.3s; }
+.pl-step.active .pl-lbl { color:var(--ap); }
+.pl-step.done .pl-lbl { color:#4ade80; }
+.pl-line { width:44px;height:1px;background:var(--line2);flex-shrink:0;position:relative;overflow:hidden; }
+.pl-line-fill { position:absolute;top:0;left:0;height:100%;background:#4ade80;width:0%;transition:width 0.8s ease; }
+.pl-line.filled .pl-line-fill { width:100%; }
+.proc-bar-wrap { margin-top:44px;width:300px; }
+.proc-bar-track { height:2px;background:var(--bg3);border-radius:1px;overflow:hidden; }
+.proc-bar-fill { height:100%;background:linear-gradient(90deg,var(--ap),var(--ahl));border-radius:1px;transition:width 0.4s ease;width:0%; }
+.proc-bar-meta { display:flex;justify-content:space-between;margin-top:9px;font-size:0.69rem;color:var(--text2); }
+
+/* RESULT */
+#result { opacity:0;pointer-events:none;transition:opacity 0.6s; }
+#result.show { opacity:1;pointer-events:all; }
+.page { padding:78px 48px 64px;max-width:960px;margin:0 auto; }
+/* video meta */
+.vm { display:flex;align-items:center;gap:14px;padding:14px 18px;background:var(--bg1);border:1px solid var(--line);border-radius:10px;margin-bottom:22px;flex-wrap:wrap; }
+.vm-plat { background:var(--bg3);border:1px solid var(--line2);border-radius:6px;padding:2px 9px;font-size:0.7rem;color:var(--text3);letter-spacing:0.06em; }
+.vm-author { font-size:0.88rem;font-weight:500; }
+.vm-sep { width:3px;height:3px;border-radius:50%;background:var(--line2); }
+.vm-stat { font-size:0.8rem;color:var(--text2); }
+.vm-stat span { color:var(--text); }
+.vm-r { margin-left:auto;display:flex;gap:6px; }
+/* tg banner */
+.tg-bar { display:flex;align-items:center;gap:12px;padding:13px 18px;background:rgba(96,165,250,0.05);border:1px solid rgba(96,165,250,0.14);border-radius:10px;margin-bottom:28px;position:relative; }
+.tg-ico { width:34px;height:34px;border-radius:50%;background:rgba(96,165,250,0.1);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0; }
+.tg-txt { flex:1; }
+.tg-txt strong { font-size:0.84rem;display:block;margin-bottom:2px; }
+.tg-txt span { font-size:0.74rem;color:var(--text2); }
+.tg-connect { height:32px;padding:0 14px;background:#60a5fa;color:#fff;border:none;border-radius:6px;font-size:0.75rem;font-weight:600;font-family:inherit;cursor:pointer;transition:opacity 0.2s; }
+.tg-connect:hover { opacity:0.85; }
+.tg-skip { height:32px;padding:0 12px;background:transparent;border:1px solid var(--line2);border-radius:6px;font-size:0.75rem;color:var(--text2);font-family:inherit;cursor:pointer;transition:all 0.2s; }
+.tg-skip:hover { color:var(--text);border-color:var(--line2); }
+.tg-close { position:absolute;top:10px;right:12px;background:none;border:none;color:var(--text2);font-size:1rem;cursor:pointer;line-height:1;transition:color 0.2s; }
+.tg-close:hover { color:var(--text); }
+/* rating */
+.rating-row { text-align:center;margin-bottom:24px; }
+.rating-lbl { font-size:0.74rem;color:var(--text2);margin-bottom:8px; }
+.stars { display:flex;justify-content:center;gap:5px; }
+.star { font-size:1.1rem;color:var(--bg4);cursor:pointer;transition:color 0.15s; }
+.star.on,.star:hover { color:#fbbf24; }
+/* blocks */
+.blk { background:var(--bg1);border:1px solid var(--line);border-radius:10px;margin-bottom:12px;overflow:hidden; }
+.blk-head { display:flex;align-items:center;justify-content:space-between;padding:13px 17px;border-bottom:1px solid var(--line); }
+.blk-title { font-size:0.85rem;font-weight:600; }
+.blk-acts { display:flex;gap:6px; }
+.blk-btn { height:28px;padding:0 12px;background:var(--bg2);border:1px solid var(--line2);border-radius:6px;font-size:0.72rem;color:var(--text2);font-family:inherit;cursor:pointer;transition:all 0.18s; }
+.blk-btn:hover { border-color:var(--line2);color:var(--text); }
+.blk-btn.hi { background:var(--ag);border-color:var(--ab);color:var(--ap); }
+.blk-body { padding:18px 17px; }
+/* improve bar */
+.imp-bar { padding:10px 17px;border-top:1px solid var(--line);display:flex;gap:6px;flex-wrap:wrap;align-items:center; }
+.imp-tag { height:28px;padding:0 12px;background:transparent;border:1px solid var(--line2);border-radius:20px;font-size:0.72rem;color:var(--text2);font-family:inherit;cursor:pointer;transition:all 0.18s;white-space:nowrap; }
+.imp-tag:hover { border-color:var(--ab);color:var(--ap); }
+.imp-main { background:var(--ahl);color:#0c0c0e;border:none;font-weight:600; }
+.imp-main:hover { background:#f5ede5; }
+.imp-inp { flex:1;min-width:180px;background:transparent;border:none;outline:none;font-size:0.78rem;color:var(--text);font-family:inherit; }
+.imp-inp::placeholder { color:var(--text2); }
+/* script */
+.script-text { font-size:0.9rem;line-height:1.85;color:var(--text);white-space:pre-wrap; }
+.sc-time { display:inline-block;min-width:40px;font-size:0.72rem;color:var(--ap);font-family:monospace;margin-right:8px; }
+/* hooks */
+.hooks { display:flex;flex-direction:column;gap:9px; }
+.hook { display:flex;gap:13px;align-items:flex-start;padding:14px;border:1px solid var(--line);border-radius:8px;background:var(--bg);transition:all 0.2s;cursor:pointer; }
+.hook:hover { border-color:var(--line2);background:var(--bg2); }
+.hook.on { border-color:var(--ab);background:var(--ag); }
+.hook-num { width:24px;height:24px;border-radius:50%;background:var(--bg3);border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;font-size:0.72rem;color:var(--text3);flex-shrink:0;font-weight:600;transition:all 0.2s; }
+.hook.on .hook-num { background:var(--ap);color:#0c0c0e;border-color:transparent; }
+.hook-body { flex:1; }
+.hook-txt { font-size:0.87rem;font-weight:500;line-height:1.4;margin-bottom:5px; }
+.hook-exp { font-size:0.74rem;color:var(--text2);line-height:1.6; }
+.hook-tags { display:flex;gap:5px;margin-top:7px;flex-wrap:wrap; }
+.tag { padding:2px 9px;border-radius:4px;font-size:0.64rem;font-weight:600; }
+.tag-s { background:rgba(74,222,128,0.08);color:#4ade80; }
+.tag-b { background:rgba(251,146,60,0.09);color:#fb923c; }
+.tag-a { background:var(--bg3);color:var(--text3); }
+.tag-t { background:var(--bg3);color:var(--text2); }
+.hook-use { height:27px;padding:0 12px;background:var(--bg2);border:1px solid var(--line2);border-radius:6px;font-size:0.72rem;color:var(--text2);font-family:inherit;cursor:pointer;flex-shrink:0;transition:all 0.18s;align-self:flex-start; }
+.hook-use:hover { border-color:var(--ab);color:var(--ap); }
+.hook.on .hook-use { background:var(--ag);border-color:var(--ab);color:var(--ap); }
+/* hashtags */
+.tags-wrap { display:flex;flex-wrap:wrap;gap:7px; }
+.htag { padding:5px 13px;border-radius:6px;background:var(--bg2);border:1px solid var(--line2);font-size:0.78rem;color:var(--text2);cursor:pointer;transition:all 0.18s; }
+.htag:hover { border-color:var(--ab);color:var(--ap); }
+/* frames */
+.frames-grid { display:grid;grid-template-columns:repeat(4,1fr);gap:10px; }
+.frame-card { border-radius:8px;overflow:hidden;border:1px solid var(--line);background:var(--bg2); }
+.frame-thumb { aspect-ratio:16/9;background:var(--bg3);position:relative;display:flex;align-items:center;justify-content:center;font-size:1.8rem;color:var(--bg4); }
+.frame-tc { position:absolute;top:6px;left:7px;background:rgba(0,0,0,0.7);border-radius:4px;padding:2px 6px;font-size:0.62rem;font-family:monospace;color:#fff; }
+.frame-type { position:absolute;top:6px;right:7px;border-radius:4px;padding:2px 7px;font-size:0.6rem;font-weight:600; }
+.type-t { background:rgba(96,165,250,0.15);color:#60a5fa; }
+.type-c { background:rgba(251,146,60,0.13);color:#fb923c; }
+.frame-info { padding:9px 11px; }
+.frame-lbl { font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);margin-bottom:4px; }
+.frame-txt { font-size:0.73rem;color:var(--text3);line-height:1.5; }
+/* transcript */
+.tr-line { display:flex;gap:11px;padding:7px 0;border-bottom:1px solid var(--line); }
+.tr-line:last-child { border-bottom:none; }
+.tr-time { font-family:monospace;font-size:0.71rem;color:var(--ap);flex-shrink:0;padding-top:2px; }
+.tr-text { font-size:0.82rem;color:var(--text2);line-height:1.6; }
+/* brief */
+.brief-block { margin-bottom:13px; }
+.brief-tc { font-size:0.74rem;font-weight:600;color:var(--ap);margin-bottom:5px;font-family:monospace; }
+.brief-line { display:flex;gap:7px;font-size:0.79rem;color:var(--text2);line-height:1.5;margin-bottom:2px; }
+.brief-key { color:var(--text3);font-weight:500;flex-shrink:0; }
+/* strategy */
+.strat-item { border:1px solid var(--line);border-radius:8px;margin-bottom:7px;overflow:hidden; }
+.strat-head { display:flex;justify-content:space-between;align-items:center;padding:13px 15px;cursor:pointer;transition:background 0.18s; }
+.strat-head:hover { background:var(--bg2); }
+.strat-title { font-size:0.84rem;font-weight:500;display:flex;align-items:center;gap:7px; }
+.strat-body { max-height:0;overflow:hidden;transition:max-height 0.4s cubic-bezier(0.23,1,0.32,1); }
+.strat-item.open .strat-body { max-height:280px; }
+.strat-content { padding:0 15px 15px;font-size:0.81rem;color:var(--text2);line-height:1.75; }
+/* desc */
+.desc-text { font-size:0.88rem;line-height:1.85;color:var(--text);white-space:pre-wrap; }
+/* scroll progress */
+.scroll-prog { position:fixed;top:58px;left:0;right:0;height:2px;z-index:99; }
+.scroll-fill { height:100%;background:linear-gradient(90deg,var(--ap),var(--ahl));width:0%;transition:width 0.08s; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="index.html" class="nav-logo">REEL<em>X</em></a>
+  <ul class="nav-links">
+    <li><a href="dashboard.html" class="active">Разбор</a></li>
+    <li><a href="dashboard.html">Мои видео</a></li>
+    <li><a href="trends.html">Тренды</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="btn btn-ghost btn-sm" onclick="window.location.href='dashboard.html'">+ Новый разбор</button>
+    <button class="btn btn-ghost btn-sm" onclick="copyLink()">🔗 Скопировать ссылку</button>
+    <div style="width:34px;height:34px;border-radius:50%;background:var(--ag);border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;font-size:0.78rem;color:var(--ap);font-weight:600;cursor:pointer;" onclick="window.location.href='settings.html'">А</div>
+  </div>
+</nav>
+<div class="scroll-prog"><div class="scroll-fill" id="sf"></div></div>
+
+<!-- PROCESSING -->
+<div id="processing">
+  <div class="proc-status">
+    <div class="proc-dot"></div>
+    <span id="proc-lbl">Скачиваем видео…</span>
+    <span class="proc-pct" id="proc-pct">5%</span>
+  </div>
+  <div class="pipeline">
+    <div class="pl-step active" id="ps0"><div class="pl-icon active" id="pi0">⬇</div><div class="pl-lbl">Скачиваем<br>видео</div></div>
+    <div class="pl-line" id="pl0"><div class="pl-line-fill"></div></div>
+    <div class="pl-step" id="ps1"><div class="pl-icon" id="pi1">♪</div><div class="pl-lbl">Извлекаем<br>аудио</div></div>
+    <div class="pl-line" id="pl1"><div class="pl-line-fill"></div></div>
+    <div class="pl-step" id="ps2"><div class="pl-icon" id="pi2">T</div><div class="pl-lbl">Транскри-<br>буем</div></div>
+    <div class="pl-line" id="pl2"><div class="pl-line-fill"></div></div>
+    <div class="pl-step" id="ps3"><div class="pl-icon" id="pi3">⊞</div><div class="pl-lbl">Извлекаем<br>кадры</div></div>
+    <div class="pl-line" id="pl3"><div class="pl-line-fill"></div></div>
+    <div class="pl-step" id="ps4"><div class="pl-icon" id="pi4">◎</div><div class="pl-lbl">Анализ<br>кадров</div></div>
+    <div class="pl-line" id="pl4"><div class="pl-line-fill"></div></div>
+    <div class="pl-step" id="ps5"><div class="pl-icon" id="pi5">✎</div><div class="pl-lbl">Генерация<br>сценария</div></div>
+  </div>
+  <div class="proc-bar-wrap">
+    <div class="proc-bar-track"><div class="proc-bar-fill" id="pbar"></div></div>
+    <div class="proc-bar-meta"><span>Обрабатываем…</span><span id="pbar-pct">5%</span></div>
+  </div>
+</div>
+
+<!-- RESULT -->
+<div id="result">
+<div class="page">
+
+  <!-- Video meta -->
+  <div class="vm">
+    <div class="vm-plat">INSTAGRAM</div>
+    <div class="vm-author">@universalpictures</div>
+    <div class="vm-sep"></div>
+    <div class="vm-stat">0:13</div>
+    <div class="vm-sep"></div>
+    <div class="vm-stat"><span>2.1М</span> просм.</div>
+    <div class="vm-sep"></div>
+    <div class="vm-stat"><span>158.5К</span> лайков</div>
+    <div class="vm-r"></div>
+  </div>
+
+  <!-- TG Banner -->
+  <div class="tg-bar" id="tg-bar">
+    <div class="tg-ico">✈️</div>
+    <div class="tg-txt"><strong>Понравился разбор?</strong><span>Получай результаты прямо в Telegram. Подключи за 10 секунд.</span></div>
+    <button class="tg-connect">✈️ Подключить</button>
+    <button class="tg-skip">Не сейчас</button>
+    <button class="tg-close" onclick="document.getElementById('tg-bar').style.display='none'">×</button>
+  </div>
+
+  <!-- Rating -->
+  <div class="rating-row">
+    <div class="rating-lbl">Оцените качество сценария</div>
+    <div class="stars">
+      <span class="star" onclick="rateStar(1)">★</span>
+      <span class="star" onclick="rateStar(2)">★</span>
+      <span class="star" onclick="rateStar(3)">★</span>
+      <span class="star" onclick="rateStar(4)">★</span>
+      <span class="star" onclick="rateStar(5)">★</span>
+    </div>
+  </div>
+
+  <!-- SCRIPT -->
+  <div class="blk">
+    <div class="blk-head">
+      <div class="blk-title">Сценарий для суфлёра</div>
+      <div class="blk-acts">
+        <button class="blk-btn">✎ Редактировать</button>
+        <button class="blk-btn hi" onclick="copyText('sc-text')">Копировать</button>
+      </div>
+    </div>
+    <div class="blk-body">
+      <div class="script-text" id="sc-text"><span class="sc-time">0:00</span>Фильм «Супер Марио: Галактика» выходит в кино уже в среду.
+
+<span class="sc-time">0:03</span>Берите билеты прямо сейчас — ссылка в профиле.
+
+<span class="sc-time">0:07</span>Подписывайтесь, чтобы не пропустить следующее.
+
+<span class="sc-time">0:10</span>~13 секунд · вертикальный формат · промо-стиль</div>
+    </div>
+    <div class="imp-bar">
+      <button class="imp-tag imp-main">✦ Улучшить</button>
+      <button class="imp-tag">Усилить зацепку</button>
+      <button class="imp-tag">Сократить</button>
+      <button class="imp-tag">Переписать начало</button>
+      <button class="imp-tag">Упростить</button>
+      <input class="imp-inp" type="text" placeholder="Напишите, что изменить…">
+    </div>
+  </div>
+
+  <!-- HOOKS -->
+  <div class="blk">
+    <div class="blk-head">
+      <div class="blk-title">Варианты зацепки</div>
+      <div class="blk-acts"><button class="blk-btn">↻ Обновить</button></div>
+    </div>
+    <div class="blk-body">
+      <div class="hooks">
+        <div class="hook on" onclick="pickHook(this)">
+          <div class="hook-num">1</div>
+          <div class="hook-body">
+            <div class="hook-txt">Фильм «Супер Марио: Галактика» выходит в кино в среду. 🔥</div>
+            <div class="hook-exp">Техника «Брендированное событие». Комбинация узнаваемого бренда с эмодзи создаёт праздничный тон. Для семейной аудитории работает особенно эффективно.</div>
+            <div class="hook-tags"><span class="tag tag-s">Сильный</span><span class="tag tag-t">~2.9 сек</span></div>
+          </div>
+          <button class="hook-use">Используется</button>
+        </div>
+        <div class="hook" onclick="pickHook(this)">
+          <div class="hook-num">2</div>
+          <div class="hook-body">
+            <div class="hook-txt">Персонажи Super Mario Galaxy танцуют королевский танец — вот что вы увидите в кино уже в среду!</div>
+            <div class="hook-exp">Техника «Специфический результат + срок». Указание конкретного дня создаёт срочность и FOMO.</div>
+            <div class="hook-tags"><span class="tag tag-a">Альтернатива</span><span class="tag tag-t">~5.5 сек — длинновато</span></div>
+          </div>
+          <button class="hook-use">Использовать</button>
+        </div>
+        <div class="hook" onclick="pickHook(this)">
+          <div class="hook-num">3</div>
+          <div class="hook-body">
+            <div class="hook-txt">Вы никогда не видели Mario таким — живой танец королевского переворота на экране</div>
+            <div class="hook-exp">Техника «Контрастное ожидание vs реальность». Зритель ожидает стандартную рекламу, но получает неожиданный перформанс.</div>
+            <div class="hook-tags"><span class="tag tag-b">Лучший выбор</span><span class="tag tag-t">~4.2 сек</span></div>
+          </div>
+          <button class="hook-use">Использовать</button>
+        </div>
+        <div class="hook" onclick="pickHook(this)">
+          <div class="hook-num">4</div>
+          <div class="hook-body">
+            <div class="hook-txt">Угадайте, сколько персонажей Mario будут танцевать на вашем экране?</div>
+            <div class="hook-exp">Техника «Curiosity gap» — вопрос без ответа вынуждает досмотреть до конца.</div>
+            <div class="hook-tags"><span class="tag tag-a">Альтернатива</span><span class="tag tag-t">~2.9 сек</span></div>
+          </div>
+          <button class="hook-use">Использовать</button>
+        </div>
+        <div class="hook" onclick="pickHook(this)">
+          <div class="hook-num">5</div>
+          <div class="hook-body">
+            <div class="hook-txt">Super Mario Galaxy в кино — живой королевский танец, который вы должны увидеть лично</div>
+            <div class="hook-exp">Техника «Трансформация + социальное доказательство». Слово «должны» создаёт социальное давление.</div>
+            <div class="hook-tags"><span class="tag tag-a">Альтернатива</span><span class="tag tag-t">~4.6 сек — длинновато</span></div>
+          </div>
+          <button class="hook-use">Использовать</button>
+        </div>
+      </div>
+    </div>
+    <div class="imp-bar">
+      <button class="imp-tag imp-main">✦ Улучшить</button>
+      <button class="imp-tag">Усилить зацепку</button>
+      <button class="imp-tag">Сократить</button>
+      <button class="imp-tag">Добавить конкретики</button>
+      <input class="imp-inp" type="text" placeholder="Напишите, что изменить…">
+    </div>
+  </div>
+
+  <!-- DESCRIPTION -->
+  <div class="blk">
+    <div class="blk-head">
+      <div class="blk-title">Описание к рилсу</div>
+      <div class="blk-acts">
+        <button class="blk-btn">✎</button>
+        <button class="blk-btn hi" onclick="copyText('desc-text')">Копировать</button>
+      </div>
+    </div>
+    <div class="blk-body">
+      <div class="desc-text" id="desc-text">Королевская танцевальная вечеринка 🔥🔥
+
+«Супер Марио: Галактика» — в кино уже в среду!
+
+Билеты по ссылке в профиле.
+
+Сохрани и отправь другу, который тоже ждёт этот фильм 🍄
+Подписывайся, чтобы не пропустить следующее.</div>
+    </div>
+    <div class="imp-bar">
+      <button class="imp-tag imp-main">✦ Улучшить</button>
+      <button class="imp-tag">Усилить призыв к действию</button>
+      <button class="imp-tag">Сократить</button>
+      <button class="imp-tag">Добавить эмодзи</button>
+      <input class="imp-inp" type="text" placeholder="Напишите, что изменить…">
+    </div>
+  </div>
+
+  <!-- HASHTAGS -->
+  <div class="blk">
+    <div class="blk-head">
+      <div class="blk-title">Хештеги</div>
+      <div class="blk-acts"><button class="blk-btn hi" onclick="copyText('htags')">Копировать</button></div>
+    </div>
+    <div class="blk-body" id="htags">
+      <div class="tags-wrap">
+        <span class="htag">#SuperMarioGalaxy</span><span class="htag">#MarioMovie</span><span class="htag">#KinotekaRF</span><span class="htag">#DanceChallenge</span><span class="htag">#FilmsInCinema</span><span class="htag">#NintendoFans</span><span class="htag">#Premiere</span><span class="htag">#SuperMario</span><span class="htag">#FilmPromotion</span><span class="htag">#RoyalDance</span><span class="htag">#MarioChars</span><span class="htag">#InCinemaWednesday</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- EDITOR BRIEF -->
+  <div class="blk">
+    <div class="blk-head">
+      <div class="blk-title">Инструкция для монтажёра</div>
+      <div class="blk-acts">
+        <button class="blk-btn">✎</button>
+        <button class="blk-btn hi" onclick="copyText('brief')">Копировать</button>
+      </div>
+    </div>
+    <div class="blk-body" id="brief">
+      <div class="brief-block">
+        <div class="brief-line"><span class="brief-key">FORMAT:</span> вертикальный ролик, промо-стиль</div>
+        <div class="brief-line"><span class="brief-key">DURATION:</span> ~13 сек</div>
+        <div class="brief-line"><span class="brief-key">REF:</span> instagram.com/reel/DWcquj5E8ZR</div>
+      </div>
+      <div class="brief-block">
+        <div class="brief-tc">0:00 — 0:04</div>
+        <div class="brief-line"><span class="brief-key">Visual:</span> динамичные кадры с танцующими персонажами на фоне Токио</div>
+        <div class="brief-line"><span class="brief-key">Text:</span> «В КИНО В СРЕДУ»</div>
+        <div class="brief-line"><span class="brief-key">Transition:</span> cut</div>
+      </div>
+      <div class="brief-block">
+        <div class="brief-tc">0:04 — 0:08</div>
+        <div class="brief-line"><span class="brief-key">Visual:</span> крупные планы — руки, эмоции, энергичные движения</div>
+        <div class="brief-line"><span class="brief-key">Text:</span> «СУПЕР МАРИО: ГАЛАКТИКА»</div>
+        <div class="brief-line"><span class="brief-key">Transition:</span> zoom in</div>
+      </div>
+      <div class="brief-block">
+        <div class="brief-tc">0:08 — 0:13</div>
+        <div class="brief-line"><span class="brief-key">Visual:</span> широкий план — все персонажи на крыше, башня на фоне</div>
+        <div class="brief-line"><span class="brief-key">Text:</span> «БЕРИ БИЛЕТЫ СЕЙЧАС»</div>
+        <div class="brief-line"><span class="brief-key">Transition:</span> fade</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STRATEGY -->
+  <div class="blk">
+    <div class="blk-head"><div class="blk-title">Стратегия продвижения</div></div>
+    <div class="blk-body" style="padding:0">
+      <div class="strat-item open">
+        <div class="strat-head" onclick="toggleStrat(this)"><div class="strat-title">▸ Разбор залёта</div><span style="font-size:0.74rem;color:var(--text2)">Свернуть</span></div>
+        <div class="strat-body"><div class="strat-content">Видео залетело за счёт трёх факторов: узнаваемый IP (Mario) + неожиданный формат (живой танец вместо трейлера) + чёткий дедлайн (среда). Алгоритм подхватил из-за высокого досматривания. Используй такую же структуру: известный бренд + неожиданное действие + конкретный срок.</div></div>
+      </div>
+      <div class="strat-item">
+        <div class="strat-head" onclick="toggleStrat(this)"><div class="strat-title">▸ Лучшее время для публикации</div><span style="font-size:0.74rem;color:var(--text2)">Развернуть</span></div>
+        <div class="strat-body"><div class="strat-content">Оптимальное время: вторник-четверг 19:00–21:00 по Москве. Для промо-контента избегай пятницу и выходные — конкуренция в ленте выше.</div></div>
+      </div>
+      <div class="strat-item">
+        <div class="strat-head" onclick="toggleStrat(this)"><div class="strat-title">▸ Что адаптировать под себя</div><span style="font-size:0.74rem;color:var(--text2)">Развернуть</span></div>
+        <div class="strat-body"><div class="strat-content">Замени бренд на свой продукт или тему. Сохрани структуру: узнаваемый элемент → неожиданный формат → срочность. Добавь личный голос в описание.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FRAMES -->
+  <div class="blk">
+    <div class="blk-head"><div class="blk-title">Покадровый разбор · 7 кадров</div></div>
+    <div class="blk-body">
+      <div class="frames-grid">
+        <div class="frame-card"><div class="frame-thumb" style="background:linear-gradient(160deg,#1a1520,#251830)">💃<div class="frame-tc">00:00</div><div class="frame-type type-t">Говорящая голова</div></div><div class="frame-info"><div class="frame-lbl">Визуал</div><div class="frame-txt">Девушка в чёрном платье с цветочным узором. Городской пейзаж на фоне.</div></div></div>
+        <div class="frame-card"><div class="frame-thumb" style="background:linear-gradient(160deg,#151a20,#182030)">🙌<div class="frame-tc">00:02</div><div class="frame-type type-c">Перебивка</div></div><div class="frame-info"><div class="frame-lbl">Визуал</div><div class="frame-txt">Две руки складываются вместе. Городская панорама на заднем плане.</div></div></div>
+        <div class="frame-card"><div class="frame-thumb" style="background:linear-gradient(160deg,#1a1515,#302020)">🕺<div class="frame-tc">00:04</div><div class="frame-type type-t">Говорящая голова</div></div><div class="frame-info"><div class="frame-lbl">Визуал</div><div class="frame-txt">Мужчина в яркой рубашке с огненным узором, широко открытым ртом.</div></div></div>
+        <div class="frame-card"><div class="frame-thumb" style="background:linear-gradient(160deg,#151a18,#1e2820)">🌆<div class="frame-tc">00:06</div><div class="frame-type type-t">Говорящая голова</div></div><div class="frame-info"><div class="frame-lbl">Визуал</div><div class="frame-txt">Молодая женщина. Одета в чёрный корсет с цветочным принтом. Токийская башня.</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRANSCRIPT -->
+  <div class="blk">
+    <div class="blk-head">
+      <div class="blk-title">Оригинальный транскрипт</div>
+      <div class="blk-acts"><button class="blk-btn hi" onclick="copyText('transcript')">Копировать текст</button></div>
+    </div>
+    <div class="blk-body" id="transcript">
+      <div class="tr-line"><div class="tr-time">0:00</div><div class="tr-text">Thank you.</div></div>
+      <div class="tr-line"><div class="tr-time">0:03</div><div class="tr-text">Super Mario Galaxy — в кино уже в среду.</div></div>
+      <div class="tr-line"><div class="tr-time">0:08</div><div class="tr-text">Берите билеты прямо сейчас.</div></div>
+      <div class="tr-line"><div class="tr-time">0:11</div><div class="tr-text">Подписывайтесь, чтобы не пропустить следующее.</div></div>
+    </div>
+  </div>
+
+</div>
+</div><!-- /result -->
+
+<script src="shared.js"></script>
+<script>
+// scroll progress
+window.addEventListener('scroll', function() {
+  var h = document.documentElement.scrollHeight - window.innerHeight;
+  document.getElementById('sf').style.width = (h > 0 ? scrollY/h*100 : 0) + '%';
+});
+
+// Pipeline animation
+var steps = [
+  {lbl:'Скачиваем видео…', pct:5},
+  {lbl:'Извлекаем аудио…', pct:22},
+  {lbl:'Транскрибируем…', pct:40},
+  {lbl:'Извлекаем кадры…', pct:58},
+  {lbl:'Анализируем кадры…', pct:78},
+  {lbl:'Генерируем сценарий…', pct:92},
+];
+var cur = 0;
+var delays = [1200,1000,1100,900,1000,800];
+
+function setStep(i) {
+  for (var j = 0; j < i; j++) {
+    var s = document.getElementById('ps'+j);
+    var ico = document.getElementById('pi'+j);
+    var line = document.getElementById('pl'+j);
+    if(s) { s.classList.remove('active'); s.classList.add('done'); }
+    if(ico) { ico.className = 'pl-icon done'; ico.textContent = '✓'; }
+    if(line) line.classList.add('filled');
+  }
+  var sc = document.getElementById('ps'+i);
+  var ic = document.getElementById('pi'+i);
+  if(sc) { sc.classList.add('active'); }
+  if(ic) ic.className = 'pl-icon active';
+  var st = steps[i] || steps[steps.length-1];
+  document.getElementById('proc-lbl').textContent = st.lbl;
+  document.getElementById('proc-pct').textContent = st.pct + '%';
+  document.getElementById('pbar').style.width = st.pct + '%';
+  document.getElementById('pbar-pct').textContent = st.pct + '%';
+}
+setStep(0);
+function advance() {
+  if (cur < 5) {
+    cur++;
+    setStep(cur);
+    setTimeout(advance, delays[cur] || 800);
+  } else {
+    setTimeout(function() {
+      // finish last step
+      var last = document.getElementById('pi5');
+      var ls = document.getElementById('ps5');
+      if(last) { last.className = 'pl-icon done'; last.textContent = '✓'; }
+      if(ls) { ls.classList.remove('active'); ls.classList.add('done'); }
+      document.getElementById('proc-lbl').textContent = 'Готово!';
+      document.getElementById('proc-pct').textContent = '100%';
+      document.getElementById('pbar').style.width = '100%';
+      document.getElementById('pbar-pct').textContent = '100%';
+      setTimeout(function() {
+        document.getElementById('processing').classList.add('done');
+        document.getElementById('result').classList.add('show');
+      }, 600);
+    }, 700);
+  }
+}
+setTimeout(function() { advance(); }, delays[0]);
+
+// Rating
+function rateStar(n) {
+  document.querySelectorAll('.star').forEach(function(s, i) {
+    s.classList.toggle('on', i < n);
+  });
+}
+
+// Hooks
+function pickHook(el) {
+  document.querySelectorAll('.hook').forEach(function(h) {
+    h.classList.remove('on');
+    h.querySelector('.hook-use').textContent = 'Использовать';
+  });
+  el.classList.add('on');
+  el.querySelector('.hook-use').textContent = 'Используется';
+}
+
+// Strategy
+function toggleStrat(head) {
+  var item = head.parentElement;
+  var isOpen = item.classList.contains('open');
+  document.querySelectorAll('.strat-item').forEach(function(i) {
+    i.classList.remove('open');
+    i.querySelector('.strat-head span').textContent = 'Развернуть';
+  });
+  if (!isOpen) {
+    item.classList.add('open');
+    head.querySelector('span').textContent = 'Свернуть';
+  }
+}
+
+function copyLink() {
+  showToast('Ссылка скопирована ✓');
+}
+</script>
+
+<footer class="footer">
+  <div class="footer-logo">REEL<em>X</em></div>
+  <div class="footer-links">
+    <a href="pricing.html">Тарифы</a>
+    <a href="#">Оферта</a>
+    <a href="#">Конфиденциальность</a>
+    <a href="#">Куки</a>
+    <a href="mailto:support@reelx.app">support@reelx.app</a>
+  </div>
+  <div class="footer-copy">© 2025 REELX · ИП</div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>REELX — Как работает</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+.page { padding: 96px 48px 80px; }
+.section { margin-bottom: 96px; }
+
+/* HOW STEPS */
+.steps-grid {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  gap: 1px; background: var(--line);
+  border: 1px solid var(--line); border-radius: 12px;
+  overflow: hidden; margin-top: 48px;
+}
+.step-card {
+  background: var(--bg); padding: 34px 28px;
+  position: relative; overflow: hidden;
+  transition: background 0.25s;
+}
+.step-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--ap), transparent);
+  opacity: 0; transition: opacity 0.25s;
+}
+.step-card:hover { background: var(--bg1); }
+.step-card:hover::before { opacity: 0.5; }
+.step-num {
+  font-family: 'DM Serif Display', serif; font-size: 3.2rem;
+  color: var(--bg3); line-height: 1; margin-bottom: 18px;
+  transition: color 0.25s;
+}
+.step-card:hover .step-num { color: rgba(207,192,176,0.07); }
+.step-ico {
+  width: 38px; height: 38px; background: var(--bg2); border: 1px solid var(--line2);
+  border-radius: 8px; display: flex; align-items: center; justify-content: center;
+  font-size: 0.9rem; margin-bottom: 14px; transition: border-color 0.25s;
+}
+.step-card:hover .step-ico { border-color: rgba(207,192,176,0.25); }
+.step-name { font-size: 0.9rem; font-weight: 600; margin-bottom: 6px; }
+.step-desc { font-size: 0.78rem; color: var(--text2); line-height: 1.7; }
+
+/* REF */
+.ref-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 48px; align-items: start; margin-top: 48px;
+}
+.ref-big {
+  font-family: 'DM Serif Display', serif;
+  font-size: 4.2rem; line-height: 1; margin: 16px 0;
+}
+.ref-big em { font-style: italic; color: var(--ap); }
+.ref-desc { font-size: 0.88rem; color: var(--text2); line-height: 1.75; }
+.ref-steps {
+  display: flex; flex-direction: column; gap: 1px;
+  background: var(--line); border: 1px solid var(--line);
+  border-radius: 12px; overflow: hidden;
+}
+.ref-step {
+  display: flex; gap: 16px; align-items: flex-start;
+  padding: 20px 24px; background: var(--bg1); transition: background 0.2s;
+}
+.ref-step:hover { background: var(--bg2); }
+.ref-n {
+  font-family: 'DM Serif Display', serif; font-size: 1.3rem;
+  color: var(--ap); flex-shrink: 0; line-height: 1.2;
+}
+.ref-t { font-size: 0.8rem; color: var(--text2); line-height: 1.6; }
+.ref-t strong { color: var(--text); display: block; margin-bottom: 2px; font-size: 0.84rem; }
+
+/* FAQ */
+.faq-list { max-width: 680px; margin-top: 48px; }
+.faq-item { border-bottom: 1px solid var(--line); }
+.faq-q {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 18px 0; cursor: pointer; font-size: 0.9rem; font-weight: 500;
+  transition: color 0.2s; gap: 14px;
+}
+.faq-q:hover { color: var(--ap); }
+.faq-ic { color: var(--text2); font-size: 1rem; transition: transform 0.3s, color 0.2s; flex-shrink: 0; }
+.faq-item.open .faq-ic { transform: rotate(45deg); color: var(--ap); }
+.faq-a {
+  max-height: 0; overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.23,1,0.32,1), padding 0.3s;
+  font-size: 0.82rem; color: var(--text2); line-height: 1.8;
+}
+.faq-item.open .faq-a { max-height: 220px; padding-bottom: 18px; }
+
+/* CTA banner */
+.cta-banner {
+  background: var(--bg1); border: 1px solid var(--line);
+  border-radius: 14px; padding: 52px;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 24px; margin-top: 96px;
+}
+.cta-banner-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2rem; line-height: 1.1;
+}
+.cta-banner-title em { font-style: italic; color: var(--ap); }
+.cta-banner-sub { font-size: 0.85rem; color: var(--text2); margin-top: 8px; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="nav-logo">REEL<em>X</em></a>
+  <ul class="nav-links">
+    <li><a href="how.html" class="active">Как работает</a></li>
+    <li><a href="trends.html">Тренды</a></li>
+    <li><a href="pricing.html">Тарифы</a></li>
+    <li><a href="how.html#faq">FAQ</a></li>
+  </ul>
+  <div class="nav-right">
+    <a href="login.html" class="btn btn-ghost btn-sm">Войти</a>
+    <a href="login.html" class="btn btn-primary btn-sm">Начать бесплатно</a>
+  </div>
+</nav>
+
+<div class="page">
+
+  <!-- HOW IT WORKS -->
+  <div class="section">
+    <div class="s-label reveal">Как работает</div>
+    <h1 class="s-title reveal d1">Шесть шагов до <em>вирусного</em></h1>
+    <div class="steps-grid">
+      <div class="step-card reveal">
+        <div class="step-num">01</div><div class="step-ico">🔗</div>
+        <div class="step-name">Вставляешь ссылку</div>
+        <div class="step-desc">Instagram Reels, TikTok, YouTube Shorts — любое вирусное видео без ограничений</div>
+      </div>
+      <div class="step-card reveal d1">
+        <div class="step-num">02</div><div class="step-ico">⬇</div>
+        <div class="step-name">Скачиваем видео</div>
+        <div class="step-desc">Автоматически загружаем и извлекаем аудиодорожку для анализа</div>
+      </div>
+      <div class="step-card reveal d2">
+        <div class="step-num">03</div><div class="step-ico">🎞</div>
+        <div class="step-name">Разбираем кадры</div>
+        <div class="step-desc">AI анализирует каждую сцену — что в кадре, текст, переходы, темп</div>
+      </div>
+      <div class="step-card reveal">
+        <div class="step-num">04</div><div class="step-ico">🎙</div>
+        <div class="step-name">Транскрибируем</div>
+        <div class="step-desc">Точная расшифровка со смысловым анализом — что и зачем говорит автор</div>
+      </div>
+      <div class="step-card reveal d1">
+        <div class="step-num">05</div><div class="step-ico">🧠</div>
+        <div class="step-name">Находим формулу</div>
+        <div class="step-desc">Определяем хуки, триггеры и структуру — почему именно это залетело</div>
+      </div>
+      <div class="step-card reveal d2">
+        <div class="step-num">06</div><div class="step-ico">✍</div>
+        <div class="step-name">Пишем сценарий</div>
+        <div class="step-desc">Готовый текст под тебя, раскадровка, хештеги и бриф монтажёру</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- REFERRAL -->
+  <div class="section">
+    <div class="s-label reveal">Партнёрам</div>
+    <h2 class="s-title reveal d1">Реферальная <em>программа</em></h2>
+    <div class="ref-grid">
+      <div class="reveal">
+        <div class="ref-big"><em>15%</em><br>с каждой<br>оплаты</div>
+        <div class="ref-desc">Если у тебя 10 000+ подписчиков в Instagram — получи партнёрскую ссылку и зарабатывай, пока твои рефералы подписаны.</div>
+      </div>
+      <div class="ref-steps reveal d1">
+        <div class="ref-step">
+          <div class="ref-n">01</div>
+          <div class="ref-t"><strong>Подай заявку</strong>Нужно 10К+ подписчиков в Instagram. Верификация вручную в течение 24 часов.</div>
+        </div>
+        <div class="ref-step">
+          <div class="ref-n">02</div>
+          <div class="ref-t"><strong>Получи ссылку</strong>Уникальная реферальная ссылка с личной статистикой переходов.</div>
+        </div>
+        <div class="ref-step">
+          <div class="ref-n">03</div>
+          <div class="ref-t"><strong>Зарабатывай 15% ежемесячно</strong>С каждой оплаты реферала — автоматически, пока он подписан.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="section" id="faq">
+    <div class="s-label reveal">FAQ</div>
+    <h2 class="s-title reveal d1">Частые <em>вопросы</em></h2>
+    <div class="faq-list reveal">
+      <div class="faq-item">
+        <div class="faq-q">Что значит безлимит? <span class="faq-ic">+</span></div>
+        <div class="faq-a">Никаких счётчиков и звёздочек. Делаешь сколько хочешь анализов — хоть 500 в месяц. Без замедления и ограничений.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Какие платформы поддерживаются? <span class="faq-ic">+</span></div>
+        <div class="faq-a">Instagram Reels, TikTok и YouTube Shorts. Просто вставляешь обычную ссылку на видео — больше ничего не нужно.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Как работает бесплатный триал? <span class="faq-ic">+</span></div>
+        <div class="faq-a">5 анализов бесплатно — без карты. Просто создаёшь аккаунт и сразу начинаешь работать.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Как платить криптой? <span class="faq-ic">+</span></div>
+        <div class="faq-a">Принимаем USDT TRC-20 через NowPayments. Подтверждается автоматически — подписка активируется сразу после поступления средств.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Можно ли отменить подписку? <span class="faq-ic">+</span></div>
+        <div class="faq-a">Да, в любой момент в настройках аккаунта. Подписка действует до конца оплаченного периода.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Как работает Viral Feed? <span class="faq-ic">+</span></div>
+        <div class="faq-a">Скрапер мониторит TikTok, Instagram и YouTube 24/7 и отбирает видео с аномальным ростом просмотров. Обновляется каждые несколько часов. Доступен всем — включая триал.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-banner reveal">
+    <div>
+      <div class="cta-banner-title">Попробуй <em>бесплатно</em></div>
+      <div class="cta-banner-sub">5 анализов без карты — прямо сейчас</div>
+    </div>
+    <a href="login.html" class="btn btn-primary">Начать бесплатно →</a>
+  </div>
+
+</div><!-- /page -->
+
+<footer class="footer">
+  <div class="footer-logo">REEL<em>X</em></div>
+  <div class="footer-links">
+    <a href="pricing.html">Тарифы</a><a href="#">Оферта</a><a href="#">Конфиденциальность</a><a href="#">Возврат</a><a href="#">Куки</a><a href="mailto:support@reelx.app">support@reelx.app</a>
+  </div>
+  <div class="footer-copy">© 2025 REELX · ИП</div>
+</footer>
+
+<script src="shared.js"></script>
+</body>
+</html>

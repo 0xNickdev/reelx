@@ -1,0 +1,49 @@
+/* REELX SHARED */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+:root{
+  --bg:#0c0c0e;--bg1:#111114;--bg2:#17171b;--bg3:#1e1e23;--bg4:#26262c;
+  --line:rgba(255,255,255,0.07);--line2:rgba(255,255,255,0.11);
+  --text:#edeae2;--text2:#68645e;--text3:#9a958f;
+  --ap:#cfc0b0;--ahl:#e8ddd2;--ag:rgba(207,192,176,0.10);
+}
+body{background:var(--bg);color:var(--text);font-family:'Instrument Sans',sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+::-webkit-scrollbar{width:3px;}::-webkit-scrollbar-track{background:var(--bg);}::-webkit-scrollbar-thumb{background:var(--ap);border-radius:2px;}
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 48px;background:rgba(12,12,14,0.93);backdrop-filter:blur(16px);border-bottom:1px solid var(--line);}
+.nav-logo{font-family:'DM Serif Display',serif;font-size:1.2rem;letter-spacing:0.14em;color:var(--text);text-decoration:none;}
+.nav-logo em{font-style:normal;color:var(--ap);}
+.nav-links{display:flex;gap:32px;list-style:none;}
+.nav-links a{font-size:0.8rem;color:var(--text2);text-decoration:none;letter-spacing:0.04em;transition:color 0.2s;}
+.nav-links a:hover,.nav-links a.active{color:var(--text);}
+.nav-right{display:flex;align-items:center;gap:14px;}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;height:40px;padding:0 20px;border-radius:8px;font-family:inherit;font-size:0.82rem;font-weight:600;letter-spacing:0.02em;cursor:pointer;text-decoration:none;transition:all 0.18s;border:none;white-space:nowrap;}
+.btn-primary{background:var(--ahl);color:#0c0c0e;}
+.btn-primary:hover{background:#f5ede5;transform:translateY(-1px);box-shadow:0 8px 24px rgba(232,221,210,0.15);}
+.btn-ghost{background:transparent;color:var(--text2);border:1px solid var(--line2);}
+.btn-ghost:hover{color:var(--text);border-color:var(--ap);}
+.btn-sm{height:34px;padding:0 16px;font-size:0.76rem;border-radius:6px;}
+.input-row{display:flex;height:52px;background:var(--bg2);border:1px solid var(--line2);border-radius:10px;overflow:hidden;transition:border-color 0.25s,box-shadow 0.25s;}
+.input-row:focus-within{border-color:rgba(207,192,176,0.4);box-shadow:0 0 0 3px rgba(207,192,176,0.06);}
+.input-row input{flex:1;background:transparent;border:none;outline:none;padding:0 18px;font-size:0.88rem;color:var(--text);font-family:inherit;}
+.input-row input::placeholder{color:var(--text2);}
+.input-row .btn{margin:5px;border-radius:7px;}
+.s-label{font-size:0.67rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--ap);margin-bottom:14px;}
+.s-title{font-family:'DM Serif Display',serif;font-size:clamp(1.8rem,3.5vw,2.8rem);line-height:1.1;color:var(--text);}
+.s-title em{font-style:italic;color:var(--text2);}
+.blk{background:var(--bg1);border:1px solid var(--line);border-radius:10px;overflow:hidden;}
+.blk-head{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--line);}
+.blk-title{font-size:0.85rem;font-weight:600;}
+.blk-body{padding:20px 18px;}
+.footer{border-top:1px solid var(--line);padding:30px 48px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;}
+.footer-logo{font-family:'DM Serif Display',serif;font-size:1rem;letter-spacing:0.12em;}
+.footer-logo em{font-style:normal;color:var(--ap);}
+.footer-links{display:flex;gap:20px;flex-wrap:wrap;}
+.footer-links a{font-size:0.71rem;color:var(--text2);text-decoration:none;transition:color 0.2s;}
+.footer-links a:hover{color:var(--text);}
+.footer-copy{font-size:0.69rem;color:var(--text2);}
+.reveal{opacity:0;transform:translateY(18px);transition:opacity 0.6s ease,transform 0.6s ease;}
+.reveal.in{opacity:1;transform:none;}
+.d1{transition-delay:0.08s;}.d2{transition-delay:0.16s;}.d3{transition-delay:0.24s;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.55)}}
+@keyframes ripple{0%{transform:scale(1);opacity:.8}100%{transform:scale(1.7);opacity:0}}

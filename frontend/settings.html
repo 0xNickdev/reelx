@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>REELX — Настройки</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+.page { padding: 78px 48px 80px; max-width: 800px; margin: 0 auto; }
+.page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 36px; }
+.page-title { font-family: 'DM Serif Display', serif; font-size: 2.2rem; }
+.back-link { font-size: 0.82rem; color: var(--text2); text-decoration: none; transition: color 0.2s; display: flex; align-items: center; gap: 6px; }
+.back-link:hover { color: var(--text); }
+
+/* BLOCKS */
+.settings-block { background: var(--bg1); border: 1px solid var(--line); border-radius: 12px; padding: 28px; margin-bottom: 14px; }
+.settings-block-title { font-size: 1rem; font-weight: 600; margin-bottom: 5px; }
+.settings-block-sub { font-size: 0.8rem; color: var(--text2); line-height: 1.5; margin-bottom: 20px; }
+
+/* TG CONNECT BLOCK */
+.tg-block { background: var(--bg1); border: 1px solid var(--line); border-radius: 12px; padding: 36px 28px; margin-bottom: 14px; text-align: center; }
+.tg-block-ico { width: 52px; height: 52px; border-radius: 50%; background: rgba(96,165,250,0.12); border: 1px solid rgba(96,165,250,0.2); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin: 0 auto 18px; }
+.tg-block-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 16px; }
+.tg-checklist { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
+.tg-checklist li { display: flex; align-items: center; gap: 8px; font-size: 0.84rem; color: var(--text2); justify-content: center; }
+.tg-checklist li::before { content: '✓'; color: #60a5fa; font-weight: 600; }
+.tg-btn { display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 24px; background: #2563eb; color: #fff; border: none; border-radius: 10px; font-size: 0.88rem; font-weight: 600; font-family: inherit; cursor: pointer; transition: all 0.2s; }
+.tg-btn:hover { background: #1d4ed8; transform: translateY(-1px); }
+
+/* LANGUAGE */
+.lang-grid { display: grid; grid-template-columns: repeat(5,1fr); gap: 8px; margin-bottom: 10px; }
+.lang-btn { padding: 12px 8px; background: var(--bg2); border: 1px solid var(--line2); border-radius: 8px; cursor: pointer; text-align: center; transition: all 0.2s; font-family: inherit; }
+.lang-btn:hover { border-color: var(--line2); }
+.lang-btn.on { background: var(--ag); border-color: var(--ab); }
+.lang-flag { font-size: 1.3rem; display: block; margin-bottom: 4px; }
+.lang-name { font-size: 0.75rem; color: var(--text2); }
+.lang-btn.on .lang-name { color: var(--ap); }
+.settings-hint { font-size: 0.75rem; color: var(--text2); line-height: 1.5; }
+
+/* AUTO SETUP */
+.auto-block { display: flex; gap: 16px; align-items: flex-start; margin-bottom: 20px; }
+.auto-ico { width: 40px; height: 40px; border-radius: 10px; background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.2); display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+.auto-txt strong { font-size: 0.9rem; display: block; margin-bottom: 3px; }
+.auto-txt span { font-size: 0.78rem; color: var(--text2); line-height: 1.5; }
+.auto-input-row { display: flex; height: 46px; background: var(--bg2); border: 1px solid var(--line2); border-radius: 8px; overflow: hidden; transition: border-color 0.25s; }
+.auto-input-row:focus-within { border-color: rgba(207,192,176,0.4); }
+.auto-prefix { display: flex; align-items: center; padding: 0 14px; color: var(--text2); font-size: 0.9rem; border-right: 1px solid var(--line2); background: var(--bg3); }
+.auto-input-row input { flex: 1; background: transparent; border: none; outline: none; padding: 0 14px; font-size: 0.85rem; color: var(--text); font-family: inherit; }
+.auto-input-row input::placeholder { color: var(--text2); }
+.auto-input-row button { margin: 5px; padding: 0 18px; background: var(--ahl); color: #0c0c0e; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: 600; font-family: inherit; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
+.auto-input-row button:hover { background: #f5ede5; }
+.auto-note { font-size: 0.73rem; color: var(--text2); margin-top: 8px; }
+
+/* DIVIDER */
+.settings-divider { display: flex; align-items: center; gap: 14px; margin: 20px 0; font-size: 0.72rem; color: var(--text2); letter-spacing: 0.06em; text-transform: uppercase; }
+.settings-divider::before, .settings-divider::after { content: ''; flex: 1; height: 1px; background: var(--line); }
+
+/* FORM FIELDS */
+.field { margin-bottom: 20px; }
+.field-label { font-size: 0.8rem; font-weight: 500; margin-bottom: 5px; display: block; }
+.field-sub { font-size: 0.74rem; color: var(--text2); margin-bottom: 8px; }
+.field-input { width: 100%; background: var(--bg2); border: 1px solid var(--line2); border-radius: 8px; padding: 12px 14px; font-size: 0.85rem; color: var(--text); font-family: inherit; outline: none; transition: border-color 0.2s; resize: vertical; }
+.field-input:focus { border-color: rgba(207,192,176,0.4); }
+.field-input::placeholder { color: var(--text2); }
+
+/* INTERESTS TAGS */
+.interests-wrap { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 8px; }
+.interest-tag { display: flex; align-items: center; gap: 5px; padding: 5px 12px; background: var(--bg2); border: 1px solid var(--line2); border-radius: 20px; font-size: 0.75rem; color: var(--text2); cursor: pointer; transition: all 0.2s; }
+.interest-tag:hover { border-color: rgba(248,113,113,0.4); color: #f87171; }
+.interest-tag.add { color: var(--text3); border-style: dashed; }
+.interest-tag .cnt { font-size: 0.65rem; color: var(--text3); background: var(--bg3); border-radius: 10px; padding: 1px 6px; }
+
+/* STYLE GRID */
+.style-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+.style-card { padding: 14px; background: var(--bg2); border: 1px solid var(--line2); border-radius: 8px; cursor: pointer; transition: all 0.2s; }
+.style-card:hover { border-color: var(--line2); }
+.style-card.on { background: var(--ag); border-color: var(--ab); }
+.style-card-name { font-size: 0.84rem; font-weight: 500; margin-bottom: 4px; }
+.style-card.on .style-card-name { color: var(--ap); }
+.style-card-desc { font-size: 0.73rem; color: var(--text2); line-height: 1.4; }
+
+/* TOGGLE SWITCH */
+.toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; }
+.toggle-label { font-size: 0.85rem; font-weight: 500; }
+.toggle-sub { font-size: 0.75rem; color: var(--text2); margin-top: 2px; }
+.toggle-switch { width: 44px; height: 24px; background: var(--bg3); border-radius: 12px; cursor: pointer; position: relative; transition: background 0.2s; flex-shrink: 0; border: 1px solid var(--line2); }
+.toggle-switch.on { background: var(--ap); border-color: var(--ap); }
+.toggle-switch::after { content: ''; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: #fff; transition: transform 0.2s; }
+.toggle-switch.on::after { transform: translateX(20px); }
+
+/* ADVANCED MODE */
+.advanced-toggle { display: flex; align-items: center; justify-content: space-between; padding: 18px 22px; background: var(--bg2); border: 1px solid var(--line2); border-radius: 10px; cursor: pointer; transition: background 0.2s; margin-bottom: 14px; }
+.advanced-toggle:hover { background: var(--bg3); }
+.advanced-toggle-left strong { font-size: 0.88rem; display: block; margin-bottom: 3px; }
+.advanced-toggle-left span { font-size: 0.75rem; color: var(--text2); }
+.advanced-content { display: none; }
+.advanced-content.show { display: block; }
+
+/* ACCOUNTS */
+.account-row { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid var(--line); }
+.account-row:last-child { border-bottom: none; }
+.account-left { display: flex; align-items: center; gap: 10px; }
+.account-status { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.account-status.connected { background: #4ade80; }
+.account-status.disconnected { background: var(--bg4); border: 1px solid var(--line2); }
+.account-ico { font-size: 1rem; }
+.account-name { font-size: 0.85rem; font-weight: 500; }
+.account-meta { font-size: 0.74rem; color: var(--text2); }
+
+/* SUBSCRIPTION */
+.sub-status { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+.sub-status-left { font-size: 0.84rem; color: var(--text2); }
+.sub-status-left strong { color: var(--text); display: block; margin-bottom: 3px; font-size: 0.88rem; }
+
+/* DANGER ZONE */
+.danger-block { background: rgba(248,113,113,0.04); border: 1px solid rgba(248,113,113,0.15); border-radius: 12px; padding: 24px 28px; margin-bottom: 14px; }
+.danger-title { font-size: 1rem; font-weight: 600; color: #f87171; margin-bottom: 6px; }
+.danger-sub { font-size: 0.8rem; color: var(--text2); margin-bottom: 18px; line-height: 1.5; }
+.danger-btn { height: 40px; padding: 0 20px; background: transparent; border: 1px solid rgba(248,113,113,0.4); border-radius: 8px; color: #f87171; font-size: 0.82rem; font-weight: 600; font-family: inherit; cursor: pointer; transition: all 0.2s; }
+.danger-btn:hover { background: rgba(248,113,113,0.08); }
+
+/* SAVE BTN */
+.save-btn { height: 42px; padding: 0 22px; background: var(--ahl); color: #0c0c0e; border: none; border-radius: 8px; font-size: 0.85rem; font-weight: 600; font-family: inherit; cursor: pointer; transition: all 0.2s; }
+.save-btn:hover { background: #f5ede5; transform: translateY(-1px); }
+.save-btn:disabled { background: var(--bg3); color: var(--text2); cursor: default; transform: none; }
+
+/* WARNING BAR */
+.warn-bar { background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.2); border-radius: 8px; padding: 12px 16px; font-size: 0.78rem; color: rgba(251,191,36,0.9); margin-bottom: 14px; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="nav-logo">REEL<em>X</em></a>
+  <ul class="nav-links">
+    <li><a href="dashboard.html">Разбор</a></li>
+    <li><a href="dashboard.html">Мои видео</a></li>
+    <li><a href="trends.html">Тренды</a></li>
+  </ul>
+  <div class="nav-right">
+    <a href="pricing.html" class="btn btn-ghost btn-sm">⚡ Подписка</a>
+    <div style="width:34px;height:34px;border-radius:50%;background:var(--ag);border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;font-size:0.78rem;color:var(--ap);font-weight:600;cursor:pointer;" onclick="window.location.href='settings.html'">А</div>
+  </div>
+</nav>
+
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <div class="page-title">Настройки</div>
+    <a href="dashboard.html" class="back-link">← Назад</a>
+  </div>
+
+  <!-- TELEGRAM CONNECT -->
+  <div class="tg-block">
+    <div class="tg-block-ico">✈️</div>
+    <div class="tg-block-title">Подключи Telegram — управляй анализами из мессенджера</div>
+    <ul class="tg-checklist">
+      <li>Получай результаты анализа мгновенно</li>
+      <li>Узнавай о новых трендах раньше всех</li>
+      <li>Запускай анализ прямо из Telegram</li>
+      <li>Не нужно открывать сайт — всё в чате</li>
+    </ul>
+    <button class="tg-btn">✈️ Подключить Telegram</button>
+  </div>
+
+  <!-- LANGUAGE -->
+  <div class="settings-block">
+    <div class="settings-block-title">Язык платформы</div>
+    <div class="lang-grid">
+      <button class="lang-btn on" onclick="pickLang(this)"><span class="lang-flag">🇷🇺</span><div class="lang-name">Русский</div></button>
+      <button class="lang-btn" onclick="pickLang(this)"><span class="lang-flag">🇺🇸</span><div class="lang-name">English</div></button>
+      <button class="lang-btn" onclick="pickLang(this)"><span class="lang-flag">🇫🇷</span><div class="lang-name">Français</div></button>
+      <button class="lang-btn" onclick="pickLang(this)"><span class="lang-flag">🇧🇷</span><div class="lang-name">Português</div></button>
+      <button class="lang-btn" onclick="pickLang(this)"><span class="lang-flag">🇩🇪</span><div class="lang-name">Deutsch</div></button>
+    </div>
+    <div class="settings-hint">Влияет на интерфейс и язык генерируемого контента (сценарий, описание, инструкция монтажёру)</div>
+  </div>
+
+  <!-- AUTO SETUP -->
+  <div class="settings-block">
+    <div class="auto-block">
+      <div class="auto-ico">⭐</div>
+      <div class="auto-txt">
+        <strong>Автонастройка профиля</strong>
+        <span>AI проанализирует ваши рилсы, транскрибирует аудио и заполнит все настройки — ниши, тон, CTA, стоп-слова</span>
+      </div>
+    </div>
+    <div class="auto-input-row">
+      <div class="auto-prefix">@</div>
+      <input type="text" placeholder="username или ссылка">
+      <button>Анализировать</button>
+    </div>
+    <div class="auto-note">Занимает 3–5 минут. Профиль должен быть публичным.</div>
+  </div>
+
+  <!-- DIVIDER -->
+  <div class="settings-divider">Детальные настройки</div>
+
+  <!-- GENERATION SETTINGS -->
+  <div class="settings-block">
+    <div class="settings-block-title">Настройка генерации</div>
+    <div class="settings-block-sub">Настройте параметры генерации под себя — стиль, аудиторию, призыв к действию</div>
+
+    <!-- About me -->
+    <div class="field">
+      <label class="field-label">Обо мне и аудитории</label>
+      <div class="field-sub">Опишите, кто вы, кто ваша аудитория, какие темы вы освещаете</div>
+      <textarea class="field-input" rows="4" placeholder="The author adapts viral reels for their own audience. Identify the niche and target audience from the original reel's content. Adapt the content to resonate maximally with that audience: use relevant examples, accessible terminology, and current pain points of the niche."></textarea>
+    </div>
+
+    <!-- Interests -->
+    <div class="field">
+      <label class="field-label">Ваши интересы</label>
+      <div class="field-sub">Темы, определённые из ваших рилсов. Добавляйте и убирайте для точных рекомендаций.</div>
+      <div style="font-size:0.74rem;color:var(--ap);margin-bottom:10px;font-style:italic;">Разберите рилсы, чтобы определить ваши интересы</div>
+      <div class="interests-wrap" id="interests">
+        <div class="interest-tag" onclick="removeTag(this)">+ Royal Dance Party <span class="cnt">1</span></div>
+        <div class="interest-tag" onclick="removeTag(this)">+ Live Action <span class="cnt">1</span></div>
+        <div class="interest-tag" onclick="removeTag(this)">+ Персонажи <span class="cnt">1</span></div>
+        <div class="interest-tag" onclick="removeTag(this)">+ Premium Fashion <span class="cnt">1</span></div>
+        <div class="interest-tag" onclick="removeTag(this)">+ Лён <span class="cnt">1</span></div>
+        <div class="interest-tag" onclick="removeTag(this)">+ Luxury <span class="cnt">1</span></div>
+        <div class="interest-tag" onclick="removeTag(this)">+ Кино <span class="cnt">1</span></div>
+        <div class="interest-tag" onclick="removeTag(this)">+ Minimalism <span class="cnt">1</span></div>
+        <div class="interest-tag" onclick="removeTag(this)">+ Super Mario Galaxy <span class="cnt">1</span></div>
+        <div class="interest-tag" onclick="removeTag(this)">+ Кинотеатр <span class="cnt">1</span></div>
+        <div class="interest-tag" onclick="removeTag(this)">+ Билеты <span class="cnt">1</span></div>
+        <div class="interest-tag" onclick="removeTag(this)">+ Franchise Marketing <span class="cnt">1</span></div>
+        <div class="interest-tag" onclick="removeTag(this)">+ Премьера <span class="cnt">1</span></div>
+        <div class="interest-tag" onclick="removeTag(this)">+ Роскошный стиль <span class="cnt">1</span></div>
+      </div>
+      <div class="settings-hint">Автоматически определяются из ваших рилсов. Разбирайте больше рилсов для новых тем.</div>
+    </div>
+
+    <!-- Tone -->
+    <div class="field">
+      <label class="field-label">Тон и стиль</label>
+      <div class="style-grid">
+        <div class="style-card on" onclick="pickStyle(this)">
+          <div class="style-card-name">Разговорный</div>
+          <div class="style-card-desc">lively, conversational, first person. As if sitting on camera…</div>
+        </div>
+        <div class="style-card" onclick="pickStyle(this)">
+          <div class="style-card-name">Экспертный</div>
+          <div class="style-card-desc">confident, expert-level. Speaking as a practitioner who know…</div>
+        </div>
+        <div class="style-card" onclick="pickStyle(this)">
+          <div class="style-card-name">Энергичный</div>
+          <div class="style-card-desc">energetic, dynamic, with a touch of humor. Short phrases, rh…</div>
+        </div>
+        <div class="style-card" onclick="pickStyle(this)">
+          <div class="style-card-name">Спокойный</div>
+          <div class="style-card-desc">calm, thoughtful. No rush, with pauses. As if explaining ove…</div>
+        </div>
+        <div class="style-card" onclick="pickStyle(this)">
+          <div class="style-card-name">Свой формат</div>
+          <div class="style-card-desc">Напишите свой стиль в поле ниже</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Script ending -->
+    <div class="field">
+      <label class="field-label">Концовка сценария</label>
+      <div class="field-sub">Фраза, которой заканчивается каждый сценарий</div>
+      <input type="text" class="field-input" placeholder="Subscribe so you don't miss the next one.">
+    </div>
+
+    <!-- Description ending -->
+    <div class="field">
+      <label class="field-label">Концовка описания</label>
+      <div class="field-sub">Призыв к действию в конце описания к рилсу</div>
+      <input type="text" class="field-input" placeholder='"Save and send to someone who needs this" → "Subscribe so you don't miss the next one."'>
+    </div>
+
+    <!-- Stop words -->
+    <div class="field">
+      <label class="field-label">Запрещённые слова</label>
+      <div class="field-sub">Слова и фразы, которые не должны появляться в генерации (через запятую)</div>
+      <textarea class="field-input" rows="3" placeholder="уничтожил, убийца, революция, это меняет всё, безумный, невероятный, шокирующий, взорвал, потрясающий..."></textarea>
+    </div>
+
+    <!-- Video format -->
+    <div class="field">
+      <label class="field-label">Формат видео</label>
+      <div class="style-grid">
+        <div class="style-card on" onclick="pickFormat(this)">
+          <div class="style-card-name">Голова + визуал</div>
+          <div class="style-card-desc">top 30% of the screen is talking head, bottom 70% is visuals…</div>
+        </div>
+        <div class="style-card" onclick="pickFormat(this)">
+          <div class="style-card-name">Только голова</div>
+          <div class="style-card-desc">talking head full screen with text callouts overlaid on vide…</div>
+        </div>
+        <div class="style-card" onclick="pickFormat(this)">
+          <div class="style-card-name">Скринкаст</div>
+          <div class="style-card-desc">full-screen screencast with voiceover, no talking head…</div>
+        </div>
+        <div class="style-card" onclick="pickFormat(this)">
+          <div class="style-card-name">Свой формат</div>
+          <div class="style-card-desc">Опишите свой формат</div>
+        </div>
+      </div>
+    </div>
+
+    <button class="save-btn" onclick="saveSettings()">Сохранить</button>
+  </div>
+
+  <!-- CONTENT RADAR -->
+  <div class="settings-block">
+    <div class="settings-block-title">Радар контента</div>
+    <div class="settings-block-sub">Получайте уведомления в Telegram, когда рилсы залетают в ваших нишах</div>
+
+    <div class="warn-bar">✈️ Привяжите Telegram для получения уведомлений</div>
+
+    <div class="toggle-row">
+      <div>
+        <div class="toggle-label">Уведомления о трендах</div>
+      </div>
+      <div class="toggle-switch" onclick="this.classList.toggle('on')"></div>
+    </div>
+  </div>
+
+  <!-- ADVANCED MODE -->
+  <div class="settings-block" style="padding:0;overflow:hidden;">
+    <div class="advanced-toggle" onclick="toggleAdvanced(this)">
+      <div class="advanced-toggle-left">
+        <strong>Расширенный режим</strong>
+        <span>Редактировать инструкции целиком для полного контроля</span>
+      </div>
+      <span style="color:var(--text2);font-size:1rem;" id="adv-arrow">›</span>
+    </div>
+    <div class="advanced-content" id="adv-content">
+      <div style="padding:0 24px 24px;">
+        <!-- Content instruction -->
+        <div style="border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-bottom:12px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--line);">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span style="color:var(--ap);font-size:0.8rem;">▾</span>
+              <span style="font-size:0.88rem;font-weight:500;">Инструкция контента</span>
+            </div>
+            <span style="font-size:0.75rem;color:var(--text2);">Стандартная</span>
+          </div>
+          <div style="padding:16px 18px;">
+            <div style="font-size:0.78rem;color:var(--text2);margin-bottom:10px;">Определяет, как пишется сценарий, описание и инструкция монтажёру. Оставьте пустым для стандартной инструкции.</div>
+            <textarea class="field-input" rows="7" placeholder="Оставьте пустым для стандартной инструкции…"></textarea>
+            <button class="save-btn" style="margin-top:12px;" onclick="showToast('Сохранено ✓')">Сохранить</button>
+          </div>
+        </div>
+        <!-- Strategy instruction -->
+        <div style="border:1px solid var(--line);border-radius:10px;overflow:hidden;">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--line);">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span style="color:var(--ap);font-size:0.8rem;">▾</span>
+              <span style="font-size:0.88rem;font-weight:500;">Инструкция стратегии</span>
+            </div>
+            <span style="font-size:0.75rem;color:var(--text2);">Стандартная</span>
+          </div>
+          <div style="padding:16px 18px;">
+            <div style="font-size:0.78rem;color:var(--text2);margin-bottom:10px;">Определяет анализ залёта, стратегию комментариев, хештеги и обложку. Оставьте пустым для стандартной инструкции.</div>
+            <textarea class="field-input" rows="7" placeholder="Оставьте пустым для стандартной инструкции…"></textarea>
+            <button class="save-btn" style="margin-top:12px;" onclick="showToast('Сохранено ✓')">Сохранить</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUBSCRIPTION -->
+  <div class="settings-block">
+    <div class="settings-block-title">Подписка</div>
+    <div class="sub-status">
+      <div class="sub-status-left">
+        <strong>У вас нет активной подписки</strong>
+        Используется 2 из 5 бесплатных анализов
+      </div>
+      <a href="pricing.html" class="btn btn-primary btn-sm">Выбрать тариф</a>
+    </div>
+  </div>
+
+  <!-- LINKED ACCOUNTS -->
+  <div class="settings-block">
+    <div class="settings-block-title">Привязанные аккаунты</div>
+    <div class="account-row">
+      <div class="account-left">
+        <div class="account-status connected"></div>
+        <div class="account-ico">✉️</div>
+        <div>
+          <div class="account-name">Email</div>
+          <div class="account-meta">user@example.com</div>
+        </div>
+      </div>
+      <span style="font-size:0.74rem;color:#4ade80;">Привязан</span>
+    </div>
+    <div class="account-row">
+      <div class="account-left">
+        <div class="account-status disconnected"></div>
+        <div class="account-ico">✈️</div>
+        <div>
+          <div class="account-name">Telegram</div>
+          <div class="account-meta">— Не привязан</div>
+        </div>
+      </div>
+      <button class="btn btn-ghost btn-sm">Привязать</button>
+    </div>
+  </div>
+
+  <!-- DANGER ZONE -->
+  <div class="danger-block">
+    <div class="danger-title">Удаление аккаунта</div>
+    <div class="danger-sub">Это действие необратимо. Все ваши данные, видео, скрипты и подписка будут удалены.</div>
+    <button class="danger-btn" onclick="confirmDelete()">Удалить аккаунт</button>
+  </div>
+
+</div><!-- /page -->
+
+<footer class="footer">
+  <div class="footer-logo">REEL<em>X</em></div>
+  <div class="footer-links">
+    <a href="pricing.html">Тарифы</a><a href="#">Оферта</a><a href="#">Конфиденциальность</a><a href="#">Возврат</a><a href="#">Куки</a><a href="mailto:support@reelx.app">support@reelx.app</a>
+  </div>
+  <div class="footer-copy">© 2025 REELX · ИП</div>
+</footer>
+
+<script src="shared.js"></script>
+<script>
+function pickLang(btn) {
+  document.querySelectorAll('.lang-btn').forEach(function(b){b.classList.remove('on');});
+  btn.classList.add('on');
+}
+function pickStyle(card) {
+  card.closest('.style-grid').querySelectorAll('.style-card').forEach(function(c){c.classList.remove('on');});
+  card.classList.add('on');
+}
+function pickFormat(card) {
+  card.closest('.style-grid').querySelectorAll('.style-card').forEach(function(c){c.classList.remove('on');});
+  card.classList.add('on');
+}
+function removeTag(tag) {
+  tag.style.opacity = '0';
+  tag.style.transform = 'scale(0.8)';
+  tag.style.transition = 'all 0.2s';
+  setTimeout(function(){tag.remove();}, 200);
+}
+function toggleAdvanced(el) {
+  var content = document.getElementById('adv-content');
+  var arrow = document.getElementById('adv-arrow');
+  content.classList.toggle('show');
+  arrow.textContent = content.classList.contains('show') ? '˅' : '›';
+}
+function saveSettings() {
+  showToast('Настройки сохранены ✓');
+}
+function confirmDelete() {
+  if(confirm('Вы уверены? Это действие необратимо.')) {
+    showToast('Аккаунт удалён');
+    setTimeout(function(){ window.location.href = 'index.html'; }, 1500);
+  }
+}
+</script>
+</body>
+</html>

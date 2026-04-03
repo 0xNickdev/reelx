@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>REELX — Тарифы</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+.page { padding: 96px 48px 80px; max-width: 1060px; margin: 0 auto; }
+
+/* VS TABLE */
+.vs-wrap { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; margin-top: 48px; }
+.vs-head { display: grid; grid-template-columns: 2fr 1fr 1fr; background: var(--bg2); border-bottom: 1px solid var(--line); }
+.vs-hc { padding: 12px 22px; font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text2); }
+.vs-hc.hi { color: var(--ap); }
+.vs-row { display: grid; grid-template-columns: 2fr 1fr 1fr; border-bottom: 1px solid var(--line); transition: background 0.2s; }
+.vs-row:last-child { border-bottom: none; }
+.vs-row:hover { background: var(--bg2); }
+.vs-c { padding: 14px 22px; font-size: 0.83rem; display: flex; align-items: center; }
+.vs-c:nth-child(2) { color: var(--ap); font-weight: 500; }
+.vs-c:nth-child(3) { color: var(--text2); }
+.cross { text-decoration: line-through; opacity: 0.45; }
+
+/* PRICING CARD */
+.price-section { margin-top: 80px; }
+.price-card {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 1px; background: var(--line);
+  border: 1px solid var(--line); border-radius: 14px;
+  overflow: hidden; max-width: 860px;
+  position: relative;
+}
+.price-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--ap), transparent);
+}
+.price-left { background: var(--bg); padding: 48px 44px; }
+.price-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--ag); border: 1px solid var(--ab);
+  border-radius: 6px; padding: 4px 12px;
+  font-size: 0.68rem; color: var(--ap); letter-spacing: 0.08em; text-transform: uppercase;
+  margin-bottom: 28px;
+}
+.price-amount {
+  font-family: 'DM Serif Display', serif;
+  font-size: 4.5rem; line-height: 1; color: var(--text);
+}
+.price-amount sup { font-size: 1.4rem; vertical-align: super; color: var(--text2); font-family: inherit; }
+.price-period { font-size: 0.82rem; color: var(--text2); margin-top: 6px; }
+.price-tagline { font-size: 0.8rem; color: var(--text2); margin-top: 16px; line-height: 1.7; max-width: 260px; }
+.price-methods { display: flex; gap: 7px; margin-top: 26px; flex-wrap: wrap; }
+.pay-badge {
+  display: flex; align-items: center; gap: 5px;
+  padding: 5px 11px; background: var(--bg2); border: 1px solid var(--line2);
+  border-radius: 6px; font-size: 0.71rem; color: var(--text2);
+}
+.price-cta {
+  display: flex; align-items: center; justify-content: center;
+  width: 100%; margin-top: 32px; height: 50px;
+  background: var(--ahl); color: #0c0c0e;
+  border: none; border-radius: 10px;
+  font-size: 0.88rem; font-weight: 600; font-family: inherit;
+  cursor: pointer; text-decoration: none; transition: all 0.2s;
+}
+.price-cta:hover { background: #f5ede5; transform: translateY(-1px); box-shadow: 0 12px 32px rgba(232,221,210,0.12); }
+.price-note { font-size: 0.69rem; color: var(--text2); text-align: center; margin-top: 10px; }
+.price-right { background: var(--bg1); padding: 48px 44px; }
+.pf {
+  display: flex; align-items: flex-start; gap: 11px;
+  padding: 13px 0; border-bottom: 1px solid var(--line);
+  font-size: 0.82rem; color: var(--text2);
+}
+.pf:last-child { border-bottom: none; }
+.pf strong { color: var(--text); display: block; font-size: 0.84rem; font-weight: 500; margin-bottom: 1px; }
+.pf-check { color: var(--ap); flex-shrink: 0; margin-top: 2px; font-size: 0.75rem; }
+
+/* Comparison note */
+.compare-note {
+  margin-top: 28px; padding: 20px 24px;
+  background: var(--bg1); border: 1px solid var(--line);
+  border-radius: 10px; max-width: 860px;
+  display: flex; align-items: center; gap: 16px;
+}
+.compare-note-ico { font-size: 1.2rem; flex-shrink: 0; }
+.compare-note-text { font-size: 0.82rem; color: var(--text2); line-height: 1.6; }
+.compare-note-text strong { color: var(--ap); }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="nav-logo">REEL<em>X</em></a>
+  <ul class="nav-links">
+    <li><a href="how.html">Как работает</a></li>
+    <li><a href="trends.html">Тренды</a></li>
+    <li><a href="pricing.html" class="active">Тарифы</a></li>
+    <li><a href="how.html#faq">FAQ</a></li>
+  </ul>
+  <div class="nav-right">
+    <a href="login.html" class="btn btn-ghost btn-sm">Войти</a>
+    <a href="login.html" class="btn btn-primary btn-sm">Начать бесплатно</a>
+  </div>
+</nav>
+
+<div class="page">
+
+  <!-- VS TABLE -->
+  <div class="s-label reveal">Сравнение</div>
+  <h1 class="s-title reveal d1">REELX против <em>остальных</em></h1>
+
+  <div class="vs-wrap reveal">
+    <div class="vs-head">
+      <div class="vs-hc">Параметр</div>
+      <div class="vs-hc hi">REELX</div>
+      <div class="vs-hc">Конкуренты</div>
+    </div>
+    <div class="vs-row"><div class="vs-c">Цена</div><div class="vs-c">2 000₽ / мес</div><div class="vs-c">от 2 000₽ за 50 анализов</div></div>
+    <div class="vs-row"><div class="vs-c">Лимит анализов</div><div class="vs-c">∞ Безлимит</div><div class="vs-c cross">50–300 штук</div></div>
+    <div class="vs-row"><div class="vs-c">Viral Feed</div><div class="vs-c">Открыт всем</div><div class="vs-c cross">Платный апгрейд</div></div>
+    <div class="vs-row"><div class="vs-c">Онбординг по нише</div><div class="vs-c">✓ Есть</div><div class="vs-c cross">Нет</div></div>
+    <div class="vs-row"><div class="vs-c">Реферальная программа</div><div class="vs-c">15% ежемесячно</div><div class="vs-c cross">Нет</div></div>
+    <div class="vs-row"><div class="vs-c">Оплата криптой</div><div class="vs-c">USDT TRC-20</div><div class="vs-c cross">Нет</div></div>
+    <div class="vs-row"><div class="vs-c">Триал</div><div class="vs-c">5 анализов бесплатно</div><div class="vs-c">3 сценария</div></div>
+  </div>
+
+  <!-- PRICING -->
+  <div class="price-section">
+    <div class="s-label reveal">Тариф</div>
+    <h2 class="s-title reveal d1">Один тариф. <em>Всё включено.</em></h2>
+
+    <div class="price-card reveal">
+      <div class="price-left">
+        <div class="price-badge">✦ Единственный тариф</div>
+        <div class="price-amount"><sup>₽</sup>2 000</div>
+        <div class="price-period">в месяц · автопродление</div>
+        <div class="price-tagline">Никаких звёздочек. Никаких скрытых лимитов. Безлимит — значит безлимит.</div>
+        <div class="price-methods">
+          <div class="pay-badge">⚡ СБП</div>
+          <div class="pay-badge">💳 Карта РФ</div>
+          <div class="pay-badge">₮ USDT TRC-20</div>
+        </div>
+        <a href="login.html" class="price-cta">Начать — 5 анализов бесплатно</a>
+        <div class="price-note">Без карты · Отмена в любой момент</div>
+      </div>
+      <div class="price-right">
+        <div class="pf"><span class="pf-check">✦</span><div><strong>Безлимит анализов</strong>Без счётчиков и замедлений — любое количество</div></div>
+        <div class="pf"><span class="pf-check">✦</span><div><strong>Сценарий + хуки + хештеги</strong>Полный пакет за один разбор</div></div>
+        <div class="pf"><span class="pf-check">✦</span><div><strong>Бриф монтажёру</strong>Готовая инструкция с таймкодами</div></div>
+        <div class="pf"><span class="pf-check">✦</span><div><strong>Viral Feed 24/7</strong>Тренды обновляются каждые несколько часов</div></div>
+        <div class="pf"><span class="pf-check">✦</span><div><strong>Instagram · TikTok · YouTube</strong>Все платформы включены</div></div>
+        <div class="pf"><span class="pf-check">✦</span><div><strong>История анализов</strong>Все разборы сохраняются в аккаунте</div></div>
+      </div>
+    </div>
+
+    <div class="compare-note reveal">
+      <div class="compare-note-ico">💡</div>
+      <div class="compare-note-text">
+        У конкурентов «безлимит» стоит <strong>10 000₽/мес</strong> и имеет скрытые ограничения (300 анализов на скорости, потом медленнее). У нас — реальный безлимит за <strong>2 000₽</strong>.
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer class="footer">
+  <div class="footer-logo">REEL<em>X</em></div>
+  <div class="footer-links">
+    <a href="pricing.html">Тарифы</a><a href="#">Оферта</a><a href="#">Конфиденциальность</a><a href="#">Возврат</a><a href="#">Куки</a><a href="mailto:support@reelx.app">support@reelx.app</a>
+  </div>
+  <div class="footer-copy">© 2025 REELX · ИП</div>
+</footer>
+
+<script src="shared.js"></script>
+</body>
+</html>
