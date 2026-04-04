@@ -70,6 +70,7 @@ async function apiLogin(email, password) {
   localStorage.setItem('reelx_user_id', data.user_id);
   localStorage.setItem('reelx_token', data.access_token);
   localStorage.setItem('reelx_email', data.email);
+  if (data.name) localStorage.setItem('reelx_name', data.name);
   return data;
 }
 

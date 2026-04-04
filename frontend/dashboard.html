@@ -185,8 +185,11 @@
 if (!isLoggedIn()) { window.location.href = 'login.html'; }
 
 // ── GREET ───────────────────────────────────────────────
-var email = localStorage.getItem('reelx_email') || '';
-var name = email.split('@')[0] || 'там';
+var name = localStorage.getItem('reelx_name') || '';
+if (!name) {
+  var email = localStorage.getItem('reelx_email') || '';
+  name = email.split('@')[0] || 'там';
+}
 document.getElementById('greet-name').textContent = name.charAt(0).toUpperCase() + name.slice(1);
 
 // ── UPDATE TRIAL BAR ────────────────────────────────────
