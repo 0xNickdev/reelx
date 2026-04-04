@@ -185,12 +185,59 @@
 
 <script src="shared.js"></script>
 <script>
+if (!isLoggedIn()) { window.location.href = 'login.html'; }
+
+async function loadDashboard() {
+  try {
+    var sub = await apiGetSubscription();
+    if (sub.status === 'active') {
+      document.querySelector('.trial-bar').style.display = 'none';
+    }
+  } catch(e) {}
+
+  try {
+    var history = await apiGetHistory();
+    renderHistory(history);
+  } catch(e) {}
+}
+
+function renderHistory(items) {
+  var grid = document.querySelector('.history-grid');
+  if (!grid || !items || items.length === 0) return;
+  var newCard = grid.querySelector('.hist-new');
+  grid.querySelectorAll('a.hist-card').forEach(function(c) { c.remove(); });
+  items.slice(0, 2).forEach(function(item) {
+    var meta = item.video_meta || {};
+    var card = document.createElement('a');
+    card.href = 'analyze.html?job=' + item.job_id;
+    card.className = 'hist-card';
+    card.innerHTML =
+      '<div class="hist-plat">' + (meta.platform || 'Video') + '</div>' +
+      '<div class="hist-title">@' + (meta.uploader || 'unknown') + '</div>' +
+      '<div class="hist-meta">' + timeAgo(item.created_at) + ' · ' + formatNumber(meta.view_count) + ' просм.</div>';
+    grid.insertBefore(card, newCard);
+  });
+}
+
 function startAnalyze() {
   var url = document.getElementById('dash-url').value.trim();
   if (!url) { document.getElementById('dash-url').focus(); return; }
-  window.location.href = 'analyze.html';
+  var btn = document.querySelector('.inp-btn');
+  btn.textContent = 'Запускаем…'; btn.disabled = true;
+  apiStartAnalysis(url).then(function(data) {
+    localStorage.setItem('reelx_current_job', data.job_id);
+    window.location.href = 'analyze.html?job=' + data.job_id;
+  }).catch(function(e) {
+    showToast(e.message, 'error');
+    btn.textContent = 'Разобрать →'; btn.disabled = false;
+  });
 }
-document.getElementById('dash-url').addEventListener('keydown', function(e){ if(e.key==='Enter') startAnalyze(); });
+
+document.getElementById('dash-url').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') startAnalyze();
+});
+
+loadDashboard();
 </script>
 </body>
 </html>

@@ -440,77 +440,190 @@
 
 <script src="shared.js"></script>
 <script>
-// scroll progress
+// Полный скрипт для analyze.html
+// Заменить весь <script> блок в конце файла
+ 
+if (!isLoggedIn()) { window.location.href = 'login.html'; }
+ 
+// Get job_id from URL or localStorage
+var urlParams = new URLSearchParams(window.location.search);
+var jobId = urlParams.get('job') || localStorage.getItem('reelx_current_job');
+ 
+// Scroll progress
 window.addEventListener('scroll', function() {
   var h = document.documentElement.scrollHeight - window.innerHeight;
   document.getElementById('sf').style.width = (h > 0 ? scrollY/h*100 : 0) + '%';
 });
-
-// Pipeline animation
-var steps = [
-  {lbl:'Скачиваем видео…', pct:5},
-  {lbl:'Извлекаем аудио…', pct:22},
-  {lbl:'Транскрибируем…', pct:40},
-  {lbl:'Извлекаем кадры…', pct:58},
-  {lbl:'Анализируем кадры…', pct:78},
-  {lbl:'Генерируем сценарий…', pct:92},
-];
-var cur = 0;
-var delays = [1200,1000,1100,900,1000,800];
-
-function setStep(i) {
-  for (var j = 0; j < i; j++) {
-    var s = document.getElementById('ps'+j);
-    var ico = document.getElementById('pi'+j);
-    var line = document.getElementById('pl'+j);
-    if(s) { s.classList.remove('active'); s.classList.add('done'); }
-    if(ico) { ico.className = 'pl-icon done'; ico.textContent = '✓'; }
-    if(line) line.classList.add('filled');
-  }
-  var sc = document.getElementById('ps'+i);
-  var ic = document.getElementById('pi'+i);
-  if(sc) { sc.classList.add('active'); }
-  if(ic) ic.className = 'pl-icon active';
-  var st = steps[i] || steps[steps.length-1];
-  document.getElementById('proc-lbl').textContent = st.lbl;
-  document.getElementById('proc-pct').textContent = st.pct + '%';
-  document.getElementById('pbar').style.width = st.pct + '%';
-  document.getElementById('pbar-pct').textContent = st.pct + '%';
-}
-setStep(0);
-function advance() {
-  if (cur < 5) {
-    cur++;
-    setStep(cur);
-    setTimeout(advance, delays[cur] || 800);
-  } else {
-    setTimeout(function() {
-      // finish last step
-      var last = document.getElementById('pi5');
-      var ls = document.getElementById('ps5');
-      if(last) { last.className = 'pl-icon done'; last.textContent = '✓'; }
-      if(ls) { ls.classList.remove('active'); ls.classList.add('done'); }
-      document.getElementById('proc-lbl').textContent = 'Готово!';
-      document.getElementById('proc-pct').textContent = '100%';
-      document.getElementById('pbar').style.width = '100%';
-      document.getElementById('pbar-pct').textContent = '100%';
-      setTimeout(function() {
-        document.getElementById('processing').classList.add('done');
-        document.getElementById('result').classList.add('show');
-      }, 600);
-    }, 700);
+ 
+// Pipeline steps config
+var STEPS = {
+  'pending':          { idx: 0, label: 'В очереди…',          pct: 0 },
+  'downloading':      { idx: 0, label: 'Скачиваем видео…',    pct: 5 },
+  'extracting_audio': { idx: 1, label: 'Извлекаем аудио…',    pct: 20 },
+  'transcribing':     { idx: 2, label: 'Транскрибируем…',     pct: 38 },
+  'extracting_frames':{ idx: 3, label: 'Извлекаем кадры…',    pct: 55 },
+  'analyzing':        { idx: 4, label: 'Анализируем кадры…',  pct: 72 },
+  'generating':       { idx: 5, label: 'Генерируем сценарий…',pct: 88 },
+  'done':             { idx: 5, label: 'Готово!',              pct: 100 },
+  'failed':           { idx: 0, label: 'Ошибка',              pct: 0 },
+};
+ 
+function updatePipeline(status, pct, label) {
+  var step = STEPS[status] || STEPS['pending'];
+  var activeIdx = step.idx;
+ 
+  document.getElementById('proc-lbl').textContent = label || step.label;
+  document.getElementById('proc-pct').textContent = pct + '%';
+  document.getElementById('pbar').style.width = pct + '%';
+  document.getElementById('pbar-pct').textContent = pct + '%';
+ 
+  for (var i = 0; i <= 5; i++) {
+    var ps = document.getElementById('ps' + i);
+    var pi = document.getElementById('pi' + i);
+    var pl = document.getElementById('pl' + i);
+    if (!ps) continue;
+ 
+    ps.classList.remove('active', 'done');
+    pi.classList.remove('active', 'done');
+ 
+    if (i < activeIdx) {
+      ps.classList.add('done');
+      pi.classList.add('done');
+      pi.textContent = '✓';
+      if (pl) pl.classList.add('filled');
+    } else if (i === activeIdx && status !== 'done') {
+      ps.classList.add('active');
+      pi.classList.add('active');
+    } else if (status === 'done') {
+      ps.classList.add('done');
+      pi.classList.add('done');
+      pi.textContent = '✓';
+      if (pl) pl.classList.add('filled');
+    }
   }
 }
-setTimeout(function() { advance(); }, delays[0]);
-
-// Rating
+ 
+function showResult(data) {
+  document.getElementById('processing').classList.add('done');
+  document.getElementById('result').classList.add('show');
+ 
+  // Video meta
+  var meta = data.video_meta || {};
+  var vm = document.querySelector('.vm');
+  if (vm && meta.platform) {
+    vm.querySelector('.vm-plat').textContent = meta.platform.toUpperCase();
+    vm.querySelector('.vm-author').textContent = '@' + (meta.uploader || 'unknown');
+    var stats = vm.querySelectorAll('.vm-stat span');
+    if (stats[0]) stats[0].textContent = formatNumber(meta.view_count);
+    if (stats[1]) stats[1].textContent = formatNumber(meta.like_count);
+  }
+ 
+  // Script
+  if (data.script) {
+    var scriptEl = document.getElementById('sc-text');
+    if (scriptEl) scriptEl.textContent = data.script;
+  }
+ 
+  // Hooks
+  if (data.hooks && data.hooks.length) {
+    renderHooks(data.hooks);
+  }
+ 
+  // Description
+  if (data.description) {
+    var descEl = document.getElementById('desc-text');
+    if (descEl) descEl.textContent = data.description;
+  }
+ 
+  // Hashtags
+  if (data.hashtags && data.hashtags.length) {
+    var tagsEl = document.querySelector('.tags-wrap');
+    if (tagsEl) {
+      tagsEl.innerHTML = data.hashtags.map(function(tag) {
+        return '<span class="htag">' + tag + '</span>';
+      }).join('');
+    }
+  }
+ 
+  // Editor brief
+  if (data.editor_brief) {
+    var briefEl = document.getElementById('brief');
+    if (briefEl) briefEl.innerHTML = '<pre style="white-space:pre-wrap;font-size:0.8rem;color:var(--text2);line-height:1.6">' + data.editor_brief + '</pre>';
+  }
+ 
+  // Strategy
+  if (data.strategy) {
+    var stratEl = document.querySelector('.strat-content');
+    if (stratEl) stratEl.textContent = data.strategy;
+  }
+ 
+  // Transcript
+  if (data.transcript) {
+    var trEl = document.querySelector('.blk-body[id="transcript"]');
+    if (trEl) {
+      trEl.innerHTML = data.transcript.split('\n').map(function(line) {
+        var parts = line.split('  ');
+        var time = parts[0] || '';
+        var text = parts.slice(1).join('  ') || line;
+        return '<div class="tr-line"><div class="tr-time">' + time + '</div><div class="tr-text">' + text + '</div></div>';
+      }).join('');
+    }
+  }
+ 
+  // Frames
+  if (data.frames && data.frames.length) {
+    renderFrames(data.frames);
+  }
+}
+ 
+function renderHooks(hooks) {
+  var container = document.querySelector('.hooks');
+  if (!container) return;
+  container.innerHTML = hooks.map(function(h, i) {
+    var tagClass = h.tag === 'strong' ? 'tag-s' : h.tag === 'best' ? 'tag-b' : 'tag-a';
+    var tagLabel = h.tag === 'strong' ? 'Сильный' : h.tag === 'best' ? 'Лучший выбор' : 'Альтернатива';
+    return '<div class="hook' + (h.is_selected ? ' on' : '') + '" onclick="pickHook(this)">' +
+      '<div class="hook-num">' + h.number + '</div>' +
+      '<div class="hook-body">' +
+        '<div class="hook-txt">' + h.text + '</div>' +
+        '<div class="hook-exp">' + h.explanation + '</div>' +
+        '<div class="hook-tags">' +
+          '<span class="tag ' + tagClass + '">' + tagLabel + '</span>' +
+          '<span class="tag tag-t">~' + h.timing_seconds + ' сек</span>' +
+        '</div>' +
+      '</div>' +
+      '<button class="hook-use">' + (h.is_selected ? 'Используется' : 'Использовать') + '</button>' +
+    '</div>';
+  }).join('');
+}
+ 
+function renderFrames(frames) {
+  var grid = document.querySelector('.frames-grid');
+  if (!grid) return;
+  grid.innerHTML = frames.slice(0, 4).map(function(f) {
+    var typeClass = f.frame_type === 'talking_head' ? 'type-t' : 'type-c';
+    var typeLabel = f.frame_type === 'talking_head' ? 'Говорящая голова' : 'Перебивка';
+    return '<div class="frame-card">' +
+      '<div class="frame-thumb" style="background:var(--bg3)">' +
+        '<div class="frame-tc">' + f.timestamp + '</div>' +
+        '<div class="frame-type ' + typeClass + '">' + typeLabel + '</div>' +
+        '<span style="font-size:1.5rem;opacity:0.2">🎞</span>' +
+      '</div>' +
+      '<div class="frame-info">' +
+        '<div class="frame-lbl">Визуал</div>' +
+        '<div class="frame-txt">' + f.description + '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+ 
+// UI interactions
 function rateStar(n) {
   document.querySelectorAll('.star').forEach(function(s, i) {
     s.classList.toggle('on', i < n);
   });
 }
-
-// Hooks
+ 
 function pickHook(el) {
   document.querySelectorAll('.hook').forEach(function(h) {
     h.classList.remove('on');
@@ -519,23 +632,52 @@ function pickHook(el) {
   el.classList.add('on');
   el.querySelector('.hook-use').textContent = 'Используется';
 }
-
-// Strategy
+ 
 function toggleStrat(head) {
   var item = head.parentElement;
   var isOpen = item.classList.contains('open');
   document.querySelectorAll('.strat-item').forEach(function(i) {
     i.classList.remove('open');
-    i.querySelector('.strat-head span').textContent = 'Развернуть';
+    var span = i.querySelector('.strat-head span');
+    if (span) span.textContent = 'Развернуть';
   });
   if (!isOpen) {
     item.classList.add('open');
-    head.querySelector('span').textContent = 'Свернуть';
+    var span = head.querySelector('span');
+    if (span) span.textContent = 'Свернуть';
   }
 }
-
-function copyLink() {
-  showToast('Ссылка скопирована ✓');
+ 
+function copyLink() { showToast('Ссылка скопирована ✓'); }
+ 
+// START — load job or show processing
+if (jobId) {
+  // Check current status
+  apiGetJobStatus(jobId).then(function(data) {
+    if (data.status === 'done') {
+      // Already done — show result immediately
+      updatePipeline('done', 100, 'Готово!');
+      showResult(data);
+      document.getElementById('processing').classList.add('done');
+      document.getElementById('result').classList.add('show');
+    } else if (data.status === 'failed') {
+      updatePipeline('failed', 0, 'Ошибка: ' + (data.error || 'что-то пошло не так'));
+    } else {
+      // In progress — poll
+      updatePipeline(data.status, data.progress_percent || 0, data.current_step);
+      pollJob(jobId,
+        function(d) { updatePipeline(d.status, d.progress_percent || 0, d.current_step); },
+        function(d) { showResult(d); },
+        function(err) { updatePipeline('failed', 0, 'Ошибка: ' + err); }
+      );
+    }
+  }).catch(function() {
+    // Job not found — show error
+    document.getElementById('proc-lbl').textContent = 'Анализ не найден';
+  });
+} else {
+  // No job — redirect to dashboard
+  window.location.href = 'dashboard.html';
 }
 </script>
 
