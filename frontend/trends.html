@@ -137,9 +137,8 @@
     <li><a href="pricing.html">Тарифы</a></li>
     <li><a href="how.html#faq">FAQ</a></li>
   </ul>
-  <div class="nav-right">
-    <a href="login.html" class="btn btn-ghost btn-sm">Войти</a>
-    <a href="login.html" class="btn btn-primary btn-sm">Начать бесплатно</a>
+  <div class="nav-right" id="nav-right">
+    <!-- filled by JS -->
   </div>
 </nav>
 
@@ -348,17 +347,36 @@
 <footer class="footer">
   <div class="footer-logo">REEL<em>X</em></div>
   <div class="footer-links">
-    <a href="pricing.html">Тарифы</a><a href="#">Оферта</a><a href="#">Конфиденциальность</a><a href="#">Возврат</a><a href="#">Куки</a><a href="mailto:support@reelx.app">support@reelx.app</a>
+    <a href="pricing.html">Тарифы</a><a href="#">Оферта</a><a href="#">Конфиденциальность</a><a href="#">Возврат</a><a href="#">Куки</a><a href="/cdn-cgi/l/email-protection#bfcccacfcfd0cdcbffcddadad3c791decfcf"><span class="__cf_email__" data-cfemail="becdcbceced1cccafeccdbdbd2c690dfcece">[email&#160;protected]</span></a>
   </div>
   <div class="footer-copy">© 2025 REELX · ИП</div>
 </footer>
 
 <script src="shared.js"></script>
 <script>
+// Dynamic nav based on auth state
+(function() {
+  var nr = document.getElementById('nav-right');
+  if (!nr) return;
+  if (isLoggedIn()) {
+    var avatar = document.createElement('div');
+    avatar.style.cssText = 'width:34px;height:34px;border-radius:50%;background:var(--ag);border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;font-size:0.78rem;color:var(--ap);font-weight:600;cursor:pointer;';
+    avatar.textContent = 'А';
+    avatar.onclick = function(){ window.location.href = 'settings.html'; };
+    nr.innerHTML =
+      '<a href="pricing.html" class="btn btn-ghost btn-sm">⚡ Подписка</a>' +
+      '<a href="dashboard.html" class="btn btn-primary btn-sm">Дашборд →</a>';
+    nr.appendChild(avatar);
+  } else {
+    nr.innerHTML =
+      '<a href="login.html" class="btn btn-ghost btn-sm">Войти</a>' +
+      '<a href="login.html" class="btn btn-primary btn-sm">Начать бесплатно</a>';
+  }
+})();
+
 function toggleFav(el) {
   el.classList.toggle('liked');
   el.textContent = el.classList.contains('liked') ? '♥' : '♡';
 }
 </script>
-</body>
-</html>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/clou

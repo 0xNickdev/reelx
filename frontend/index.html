@@ -129,10 +129,7 @@
     <li><a href="pricing.html">Тарифы</a></li>
     <li><a href="how.html#faq">FAQ</a></li>
   </ul>
-  <div class="nav-right">
-    <a href="login.html" class="btn btn-ghost btn-sm">Войти</a>
-    <a href="login.html" class="btn btn-primary btn-sm">Начать бесплатно</a>
-  </div>
+  <div class="nav-right" id="nav-right"></div>
 </nav>
 
 <!-- HERO -->
@@ -209,12 +206,12 @@
     <a href="#">Конфиденциальность</a>
     <a href="#">Возврат</a>
     <a href="#">Куки</a>
-    <a href="mailto:support@reelx.app">support@reelx.app</a>
+    <a href="/cdn-cgi/l/email-protection#6d1e181d1d021f192d1f08080115430c1d1d"><span class="__cf_email__" data-cfemail="5a292f2a2a35282e1a283f3f3622743b2a2a">[email&#160;protected]</span></a>
   </div>
   <div class="footer-copy">© 2025 REELX · ИП</div>
 </footer>
 
-<script src="shared.js"></script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="shared.js"></script>
 <script>
 // pipeline animation
 var pis = document.querySelectorAll('.hp-icon');
@@ -227,12 +224,4 @@ setInterval(function() {
 
 function startAnalyze() {
   var url = document.getElementById('hero-url').value.trim();
-  if (!url) { document.getElementById('hero-url').focus(); return; }
-  window.location.href = 'analyze.html';
-}
-document.getElementById('hero-url').addEventListener('keydown', function(e) {
-  if (e.key === 'Enter') startAnalyze();
-});
-</script>
-</body>
-</html>
+  if (!url) { document
