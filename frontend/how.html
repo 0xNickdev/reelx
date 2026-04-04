@@ -114,7 +114,7 @@
     <li><a href="pricing.html">Тарифы</a></li>
     <li><a href="how.html#faq">FAQ</a></li>
   </ul>
-  <div class="nav-right" id="nav-right"></div>
+  <div class="nav-right" id="nav-right-pub"></div>
 </nav>
 
 <div class="page">
@@ -229,4 +229,22 @@
 <footer class="footer">
   <div class="footer-logo">REEL<em>X</em></div>
   <div class="footer-links">
-    <a href="pricing.html">Тарифы</a><a href="#">Оферта</a><a href="#">Конфиденциальность</a><a href="#">Возврат</a><a href="#">Куки</a><a href="/cdn-cgi/l/email-protection#a1d2d4d1d1ced3d5e1d3c4c4cdd98fc0d1d1"><span class="__cf_email__" data-cfemail="74070104041b060034061111180c5a150404">[email&#160;protected]</span
+    <a href="pricing.html">Тарифы</a><a href="#">Оферта</a><a href="#">Конфиденциальность</a><a href="#">Возврат</a><a href="#">Куки</a></a>
+  </div>
+  <div class="footer-copy">© 2025 REELX · ИП</div>
+</footer>
+
+<script src="shared.js"></script>
+<script>
+(function() {
+  var nr = document.getElementById('nav-right-pub');
+  if (!nr) return;
+  if (isLoggedIn()) {
+    nr.innerHTML = '<a href="pricing.html" class="btn btn-ghost btn-sm">Подписка</a><a href="dashboard.html" class="btn btn-primary btn-sm">Дашборд</a>';
+  } else {
+    nr.innerHTML = '<a href="login.html" class="btn btn-ghost btn-sm">Войти</a><a href="login.html" class="btn btn-primary btn-sm">Начать бесплатно</a>';
+  }
+})();
+</script>
+</body>
+</html>

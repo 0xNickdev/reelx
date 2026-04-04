@@ -97,7 +97,7 @@
     <li><a href="pricing.html" class="active">Тарифы</a></li>
     <li><a href="how.html#faq">FAQ</a></li>
   </ul>
-  <div class="nav-right" id="nav-right"></div>
+  <div class="nav-right" id="nav-right-pub"></div>
 </nav>
 
 <div class="page">
@@ -163,4 +163,22 @@
 <footer class="footer">
   <div class="footer-logo">REEL<em>X</em></div>
   <div class="footer-links">
-    <a href="pricing.html">Тарифы</a><a href="#">Оферта</a><a href="#">Конфиденциальность</a><a href="#">Возврат</a><a href="#">Куки</a><a href="/cdn-cgi/l/email-protection#64171114140b161024160101081c4a051414"><span class="__cf_email__" data-cfemail="cab9bfbabaa5b8be8ab8afafa6b2e4abbaba">[email&#160;protected]</span
+    <a href="pricing.html">Тарифы</a><a href="#">Оферта</a><a href="#">Конфиденциальность</a><a href="#">Возврат</a><a href="#">Куки</a>
+  </div>
+</div>
+</footer>
+
+<script src="shared.js"></script>
+<script>
+(function() {
+  var nr = document.getElementById('nav-right-pub');
+  if (!nr) return;
+  if (isLoggedIn()) {
+    nr.innerHTML = '<a href="pricing.html" class="btn btn-ghost btn-sm">Подписка</a><a href="dashboard.html" class="btn btn-primary btn-sm">Дашборд</a>';
+  } else {
+    nr.innerHTML = '<a href="login.html" class="btn btn-ghost btn-sm">Войти</a><a href="login.html" class="btn btn-primary btn-sm">Начать бесплатно</a>';
+  }
+})();
+</script>
+</body>
+</html>

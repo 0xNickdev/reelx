@@ -271,7 +271,7 @@
     <div class="field">
       <label class="field-label">Концовка описания</label>
       <div class="field-sub">Призыв к действию в конце описания к рилсу</div>
-      <input type="text" class="field-input" placeholder='"Save and send to someone who needs this" → "Subscribe so you don't miss the next one."'>
+      <input type="text" class="field-input" placeholder='Сохрани и отправь тому, кому это нужно → Подписывайся, чтобы не пропустить следующее.'>
     </div>
 
     <!-- Stop words -->
@@ -388,7 +388,7 @@
         <div class="account-ico">✉️</div>
         <div>
           <div class="account-name">Email</div>
-          <div class="account-meta"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="deabadbbac9ebba6bfb3aeb2bbf0bdb1b3">[email&#160;protected]</a></div>
+          <div class="account-meta"><a href="mailto:support@reelx.app">support@reelx.app</a></div>
         </div>
       </div>
       <span style="font-size:0.74rem;color:#4ade80;">Привязан</span>
@@ -418,12 +418,15 @@
 <footer class="footer">
   <div class="footer-logo">REEL<em>X</em></div>
   <div class="footer-links">
-    <a href="pricing.html">Тарифы</a><a href="#">Оферта</a><a href="#">Конфиденциальность</a><a href="#">Возврат</a><a href="#">Куки</a><a href="/cdn-cgi/l/email-protection#92e1e7e2e2fde0e6d2e0f7f7feeabcf3e2e2"><span class="__cf_email__" data-cfemail="21525451514e5355615344444d590f405151">[email&#160;protected]</span></a>
+    <a href="pricing.html">Тарифы</a><a href="#">Оферта</a><a href="#">Конфиденциальность</a><a href="#">Возврат</a><a href="#">Куки</a><a href="mailto:support@reelx.app">support@reelx.app</a>
   </div>
   <div class="footer-copy">© 2025 REELX · ИП</div>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="shared.js"></script>
+<script src="shared.js"></script>
+<script>
+if (!isLoggedIn()) { window.location.href = 'login.html'; }
+</script>
 <script>
 function pickLang(btn) {
   document.querySelectorAll('.lang-btn').forEach(function(b){b.classList.remove('on');});
@@ -448,3 +451,5 @@ function toggleAdvanced(el) {
   var arrow = document.getElementById('adv-arrow');
   content.classList.toggle('show');
   arrow.textContent = content.classList.contains('show') ? '˅' : '�
+</body>
+</html>

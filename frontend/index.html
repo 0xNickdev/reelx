@@ -129,7 +129,7 @@
     <li><a href="pricing.html">Тарифы</a></li>
     <li><a href="how.html#faq">FAQ</a></li>
   </ul>
-  <div class="nav-right" id="nav-right"></div>
+  <div class="nav-right" id="nav-right-pub"></div>
 </nav>
 
 <!-- HERO -->
@@ -196,6 +196,10 @@
     </div>
   </div>
 
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    <div class="scroll-label">скролл</div>
+  </div>
 </section>
 
 <footer class="footer">
@@ -206,12 +210,23 @@
     <a href="#">Конфиденциальность</a>
     <a href="#">Возврат</a>
     <a href="#">Куки</a>
-    <a href="/cdn-cgi/l/email-protection#6d1e181d1d021f192d1f08080115430c1d1d"><span class="__cf_email__" data-cfemail="5a292f2a2a35282e1a283f3f3622743b2a2a">[email&#160;protected]</span></a>
+    <a href="mailto:support@reelx.app">support@reelx.app</a>
   </div>
   <div class="footer-copy">© 2025 REELX · ИП</div>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="shared.js"></script>
+<script src="shared.js"></script>
+<script>
+(function() {
+  var nr = document.getElementById('nav-right-pub');
+  if (!nr) return;
+  if (isLoggedIn()) {
+    nr.innerHTML = '<a href="pricing.html" class="btn btn-ghost btn-sm">&#x26A1; Подписка</a><a href="dashboard.html" class="btn btn-primary btn-sm">Дашборд &#x2192;</a>';
+  } else {
+    nr.innerHTML = '<a href="login.html" class="btn btn-ghost btn-sm">Войти</a><a href="login.html" class="btn btn-primary btn-sm">Начать бесплатно</a>';
+  }
+})();
+</script>
 <script>
 // pipeline animation
 var pis = document.querySelectorAll('.hp-icon');
@@ -225,3 +240,5 @@ setInterval(function() {
 function startAnalyze() {
   var url = document.getElementById('hero-url').value.trim();
   if (!url) { document
+</body>
+</html>

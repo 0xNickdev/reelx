@@ -293,14 +293,6 @@ async function loadDashboard() {
 
   } catch(e) {
     console.error('Dashboard load error:', e);
-    // Show zeros on error — don't crash
-    document.getElementById('stat-total').textContent = '0';
-    document.getElementById('stat-done').textContent = '0';
-    updateTrialUI(0, false);
-  }
-}
-
-loadDashboard();
-</script>
+   
 </body>
 </html>
