@@ -129,6 +129,37 @@
 </style>
 </head>
 <body>
+<script>
+function pickLang(btn) {
+  document.querySelectorAll('.lang-btn').forEach(function(b){ b.classList.remove('on'); });
+  btn.classList.add('on');
+}
+function pickStyle(card) {
+  card.closest('.style-grid').querySelectorAll('.style-card').forEach(function(c){ c.classList.remove('on'); });
+  card.classList.add('on');
+}
+function pickFormat(card) {
+  card.closest('.style-grid').querySelectorAll('.style-card').forEach(function(c){ c.classList.remove('on'); });
+  card.classList.add('on');
+}
+function removeTag(tag) {
+  tag.style.opacity = '0';
+  tag.style.transform = 'scale(0.8)';
+  tag.style.transition = 'all 0.2s';
+  setTimeout(function(){ tag.remove(); }, 200);
+}
+function toggleAdvanced(el) {
+  var content = document.getElementById('adv-content');
+  var arrow = document.getElementById('adv-arrow');
+  content.classList.toggle('show');
+  arrow.textContent = content.classList.contains('show') ? '˅' : '›';
+}
+function confirmDelete() {
+  if (confirm('Удалить аккаунт? Это действие необратимо.')) {
+    alert('Функция в разработке');
+  }
+}
+</script>
 
 <nav class="nav">
   <a href="index.html" class="nav-logo">REEL<em>X</em></a>
@@ -424,59 +455,23 @@
 </footer>
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="shared.js"></script>
+
+</body>
+</html>
 <script>
 if (!isLoggedIn()) { window.location.href = 'login.html'; }
-
-function pickLang(btn) {
-  document.querySelectorAll('.lang-btn').forEach(function(b){ b.classList.remove('on'); });
-  btn.classList.add('on');
-}
-
-function pickStyle(card) {
-  card.closest('.style-grid').querySelectorAll('.style-card').forEach(function(c){ c.classList.remove('on'); });
-  card.classList.add('on');
-}
-
-function pickFormat(card) {
-  card.closest('.style-grid').querySelectorAll('.style-card').forEach(function(c){ c.classList.remove('on'); });
-  card.classList.add('on');
-}
-
-function removeTag(tag) {
-  tag.style.opacity = '0';
-  tag.style.transform = 'scale(0.8)';
-  tag.style.transition = 'all 0.2s';
-  setTimeout(function(){ tag.remove(); }, 200);
-}
-
-function toggleAdvanced(el) {
-  var content = document.getElementById('adv-content');
-  var arrow = document.getElementById('adv-arrow');
-  content.classList.toggle('show');
-  arrow.textContent = content.classList.contains('show') ? '˅' : '›';
-}
-
 function saveSettings() {
   var btn = document.querySelector('.save-btn');
   btn.textContent = 'Сохраняем…';
   btn.disabled = true;
-
   var aboutEl = document.querySelector('textarea[placeholder*="Опишите"]');
   var endingEl = document.querySelector('input[placeholder*="Подписывайся"]');
   var stopEl = document.querySelector('textarea[placeholder*="уничтожил"]');
-
   var settings = {
     about_me: aboutEl ? aboutEl.value : '',
     script_ending: endingEl ? endingEl.value : '',
     stop_words: stopEl ? stopEl.value : '',
   };
-
-  var styleSel = document.querySelector('.style-grid .style-card.on .style-card-name');
-  if (styleSel) {
-    var toneMap = {'Разговорный':'conversational','Экспертный':'expert','Энергичный':'energetic','Спокойный':'calm'};
-    settings.tone = toneMap[styleSel.textContent] || 'conversational';
-  }
-
   apiSaveSettings(settings).then(function() {
     showToast('Настройки сохранены ✓');
     btn.textContent = 'Сохранить';
@@ -486,12 +481,6 @@ function saveSettings() {
     btn.textContent = 'Сохранить';
     btn.disabled = false;
   });
-}
-
-function confirmDelete() {
-  if (confirm('Удалить аккаунт? Это действие необратимо.')) {
-    showToast('Функция в разработке', 'error');
-  }
 }
 </script>
 </body>
