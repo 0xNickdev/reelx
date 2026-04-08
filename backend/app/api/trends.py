@@ -1,49 +1,60 @@
-from fastapi import APIRouter, HTTPException, Query
-from typing import Optional, List
+"""
+app/api/trends.py - Returns real trends from DB
+"""
+from fastapi import APIRouter, Query
 from app.core.database import get_supabase_admin
 
 router = APIRouter(prefix="/api/trends", tags=["trends"])
 
 @router.get("/feed")
 async def get_trends(
-    niche: Optional[str] = Query(None),
-    platform: Optional[str] = Query(None),
-    sort: str = Query("xfactor"),  # xfactor | views | fresh
-    limit: int = Query(20),
-    offset: int = Query(0),
+    niche: str = Query("all"),
+    platform: str = Query("all"),
+    sort: str = Query("xfactor"),
+    limit: int = Query(20)
 ):
     try:
         db = get_supabase_admin()
-        query = db.table("trends").select("*").eq("is_active", True)
+        query = db.table("trends").select("*")
 
-        if niche and niche != "all":
+        if niche != "all":
             query = query.eq("niche", niche)
-        if platform and platform != "all":
+        if platform != "all":
             query = query.eq("platform", platform)
 
         if sort == "xfactor":
             query = query.order("xfactor", desc=True)
         elif sort == "views":
             query = query.order("view_count", desc=True)
-        elif sort == "fresh":
-            query = query.order("published_at", desc=True)
+        elif sort == "recent":
+            query = query.order("scraped_at", desc=True)
 
-        result = query.range(offset, offset + limit - 1).execute()
+        result = query.limit(limit).execute()
         return result.data or []
+
     except Exception as e:
-        raise HTTPException(500, str(e))
+        print(f"[trends] error: {e}")
+        return []
 
 @router.get("/niches")
 async def get_niches():
     return [
-        {"id": "business", "name": "Бизнес", "emoji": "💰"},
-        {"id": "beauty", "name": "Бьюти", "emoji": "💄"},
-        {"id": "fitness", "name": "Фитнес", "emoji": "💪"},
-        {"id": "food", "name": "Еда", "emoji": "🍕"},
-        {"id": "psychology", "name": "Психология", "emoji": "🧠"},
-        {"id": "fashion", "name": "Мода", "emoji": "👗"},
-        {"id": "tech", "name": "Tech & AI", "emoji": "🤖"},
-        {"id": "travel", "name": "Путешествия", "emoji": "✈️"},
-        {"id": "humor", "name": "Юмор", "emoji": "😂"},
-        {"id": "other", "name": "Другое", "emoji": "🎯"},
+        {"id": "all", "label": "Все"},
+        {"id": "бизнес", "label": "Бизнес"},
+        {"id": "бьюти", "label": "Бьюти"},
+        {"id": "фитнес", "label": "Фитнес"},
+        {"id": "еда", "label": "Еда"},
+        {"id": "психология", "label": "Психология"},
+        {"id": "мода", "label": "Мода"},
+        {"id": "tech", "label": "Tech & AI"},
+        {"id": "путешествия", "label": "Путешествия"},
+        {"id": "юмор", "label": "Юмор"},
+        {"id": "lifestyle", "label": "Lifestyle"},
     ]
+
+@router.post("/scrape")
+async def trigger_scrape():
+    """Manually trigger scraping (admin only)."""
+    from app.services.tasks import scrape_trends_task
+    scrape_trends_task.delay()
+    return {"status": "scraping started"}
