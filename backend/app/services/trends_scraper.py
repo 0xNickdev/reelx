@@ -145,7 +145,9 @@ def scrape_tiktok_videos() -> list:
                 "platform": "tiktok",
                 "external_id": item.get("id", ""),
                 "url": item.get("webVideoUrl", ""),
-                "thumbnail_url": item.get("covers", {}).get("default", ""),
+                "thumbnail_url": (item.get("covers", {}).get("default", "") or 
+                                  item.get("video", {}).get("cover", "") or
+                                  item.get("imagePost", {}).get("images", [{}])[0].get("imageURL", {}).get("urlList", [""])[0] or ""),
                 "author": item.get("authorMeta", {}).get("name", ""),
                 "view_count": views,
                 "like_count": likes,

@@ -157,10 +157,10 @@
     <div class="f-sep"></div>
     <button class="f-btn on">Все ниши ▾</button>
     <div class="f-sep"></div>
-    <button class="f-btn on">Все</button>
-    <button class="f-btn">📷</button>
-    <button class="f-btn">▶</button>
-    <button class="f-btn">♪</button>
+    <button class="f-btn on" id="plat-all" onclick="setPlatform('all',this)">Все</button>
+    <button class="f-btn" id="plat-ig" onclick="setPlatform('instagram',this)">📷 Instagram</button>
+    <button class="f-btn" id="plat-tt" onclick="setPlatform('tiktok',this)">♪ TikTok</button>
+    <button class="f-btn" id="plat-yt" onclick="setPlatform('youtube',this)">▶ YouTube</button>
     <div class="f-sep"></div>
     <button class="f-btn">♡</button>
     <div class="f-sep"></div>
@@ -178,17 +178,166 @@
       <input type="text" placeholder="Поиск по авторам или нишам…">
     </div>
     <div class="sort-group filter-group">
-      <button class="f-btn on">Горячее</button>
-      <button class="f-btn">X-factor</button>
-      <button class="f-btn">Просмотры</button>
-      <button class="f-btn">Свежие</button>
+      <button class="f-btn on" onclick="setSort('xfactor',this)">Горячее</button>
+      <button class="f-btn" onclick="setSort('xfactor',this)">X-factor</button>
+      <button class="f-btn" onclick="setSort('views',this)">Просмотры</button>
+      <button class="f-btn" onclick="setSort('recent',this)">Свежие</button>
     </div>
   </div>
 
-    <!-- CARDS -->
-  <div class="cards-grid" id="trends-grid">
-    <div style="grid-column:1/-1;text-align:center;padding:60px 0;color:var(--text2);font-size:0.85rem;">
-      Загружаем тренды…
+  <!-- CARDS -->
+  <div class="cards-grid">
+    <!-- 1 -->
+    <div class="trend-card" onclick="window.location.href='analyze.html'">
+      <div class="tc-thumb" style="background:linear-gradient(160deg,#1a1520,#251830)">
+        <div class="tc-thumb-emoji">🚗</div>
+        <div class="tc-top">
+          <div class="tc-plat"><div class="tc-plat-dot dot-ig"></div>Instagram</div>
+          <div class="tc-right">
+            <div class="tc-fav" onclick="event.stopPropagation();toggleFav(this)">♡</div>
+            <div class="tc-rank">1</div>
+          </div>
+        </div>
+        <div class="tc-bottom"><div class="tc-views">1.1М</div><div class="tc-time">3 дн. назад</div></div>
+        <div class="tc-xf">363.4×</div>
+      </div>
+      <div class="tc-overlay"><button class="tc-overlay-btn">Разобрать →</button></div>
+      <div class="tc-info">
+        <div class="tc-info-row"><div class="tc-author">@nikita.vell</div><div class="tc-niche">DIY</div></div>
+        <div class="tc-cr"><span class="tc-cr-val">0.0% CR</span><span class="tc-xf-badge">363.4×</span></div>
+      </div>
+    </div>
+    <!-- 2 -->
+    <div class="trend-card" onclick="window.location.href='analyze.html'">
+      <div class="tc-thumb" style="background:linear-gradient(160deg,#1c1a1a,#282424)">
+        <div class="tc-thumb-emoji">💄</div>
+        <div class="tc-top">
+          <div class="tc-plat"><div class="tc-plat-dot dot-ig"></div>Instagram</div>
+          <div class="tc-right">
+            <div class="tc-fav" onclick="event.stopPropagation();toggleFav(this)">♡</div>
+            <div class="tc-rank">2</div>
+          </div>
+        </div>
+        <div class="tc-bottom"><div class="tc-views">61.4К</div><div class="tc-time">12 ч. назад</div></div>
+        <div class="tc-xf">301.8×</div>
+      </div>
+      <div class="tc-overlay"><button class="tc-overlay-btn">Разобрать →</button></div>
+      <div class="tc-info">
+        <div class="tc-info-row"><div class="tc-author">@viktoria_hudeem</div><div class="tc-niche">Здоровье</div></div>
+        <div class="tc-cr"><span class="tc-cr-val">0.0% CR</span><span class="tc-xf-badge">301.8×</span></div>
+      </div>
+    </div>
+    <!-- 3 -->
+    <div class="trend-card" onclick="window.location.href='analyze.html'">
+      <div class="tc-thumb" style="background:linear-gradient(160deg,#191c1a,#232826)">
+        <div class="tc-thumb-emoji">🚗</div>
+        <div class="tc-top">
+          <div class="tc-plat"><div class="tc-plat-dot dot-ig"></div>Instagram</div>
+          <div class="tc-right">
+            <div class="tc-fav" onclick="event.stopPropagation();toggleFav(this)">♡</div>
+            <div class="tc-rank">3</div>
+          </div>
+        </div>
+        <div class="tc-bottom"><div class="tc-views">559.7К</div><div class="tc-time">3 дн. назад</div></div>
+        <div class="tc-xf">184.4×</div>
+      </div>
+      <div class="tc-overlay"><button class="tc-overlay-btn">Разобрать →</button></div>
+      <div class="tc-info">
+        <div class="tc-info-row"><div class="tc-author">@nikita.vell</div><div class="tc-niche">Развлечения</div></div>
+        <div class="tc-cr"><span class="tc-cr-val">0.0% CR</span><span class="tc-xf-badge">184.4×</span></div>
+      </div>
+    </div>
+    <!-- 4 -->
+    <div class="trend-card" onclick="window.location.href='analyze.html'">
+      <div class="tc-thumb" style="background:linear-gradient(160deg,#1a1a1c,#26262a)">
+        <div class="tc-thumb-emoji">🎣</div>
+        <div class="tc-top">
+          <div class="tc-plat"><div class="tc-plat-dot dot-ig"></div>Instagram</div>
+          <div class="tc-right">
+            <div class="tc-fav" onclick="event.stopPropagation();toggleFav(this)">♡</div>
+            <div class="tc-rank">4</div>
+          </div>
+        </div>
+        <div class="tc-bottom"><div class="tc-views">94.2К</div><div class="tc-time">7 дн. назад</div></div>
+        <div class="tc-xf">120.8×</div>
+      </div>
+      <div class="tc-overlay"><button class="tc-overlay-btn">Разобрать →</button></div>
+      <div class="tc-info">
+        <div class="tc-info-row"><div class="tc-author">@yevgx</div><div class="tc-niche">Другое</div></div>
+        <div class="tc-cr"><span class="tc-cr-val">0.0% CR</span><span class="tc-xf-badge">120.8×</span></div>
+      </div>
+    </div>
+    <!-- 5 -->
+    <div class="trend-card" onclick="window.location.href='analyze.html'">
+      <div class="tc-thumb" style="background:linear-gradient(160deg,#17181f,#21222e)">
+        <div class="tc-thumb-emoji">😂</div>
+        <div class="tc-top">
+          <div class="tc-plat"><div class="tc-plat-dot dot-tt"></div>TikTok</div>
+          <div class="tc-right">
+            <div class="tc-fav" onclick="event.stopPropagation();toggleFav(this)">♡</div>
+            <div class="tc-rank">5</div>
+          </div>
+        </div>
+        <div class="tc-bottom"><div class="tc-views">819К</div><div class="tc-time">5 дн. назад</div></div>
+        <div class="tc-xf">120×</div>
+      </div>
+      <div class="tc-overlay"><button class="tc-overlay-btn">Разобрать →</button></div>
+      <div class="tc-info">
+        <div class="tc-info-row"><div class="tc-author">@thestreamerscult</div><div class="tc-niche">Юмор</div></div>
+        <div class="tc-cr"><span class="tc-cr-val">0.0% CR</span><span class="tc-xf-badge">120×</span></div>
+      </div>
+    </div>
+    <!-- 6 -->
+    <div class="trend-card" onclick="window.location.href='analyze.html'">
+      <div class="tc-thumb" style="background:linear-gradient(160deg,#1a1515,#281e1e)">
+        <div class="tc-thumb-emoji">💪</div>
+        <div class="tc-top">
+          <div class="tc-plat"><div class="tc-plat-dot dot-yt"></div>YouTube</div>
+          <div class="tc-right">
+            <div class="tc-fav" onclick="event.stopPropagation();toggleFav(this)">♡</div>
+            <div class="tc-rank">6</div>
+          </div>
+        </div>
+        <div class="tc-bottom"><div class="tc-views">2.3М</div><div class="tc-time">2 дн. назад</div></div>
+        <div class="tc-xf">98.2×</div>
+      </div>
+      <div class="tc-overlay"><button class="tc-overlay-btn">Разобрать →</button></div>
+      <div class="tc-info">
+        <div class="tc-info-row"><div class="tc-author">@fitbody_pro</div><div class="tc-niche">Фитнес</div></div>
+        <div class="tc-cr"><span class="tc-cr-val">0.0% CR</span><span class="tc-xf-badge">98.2×</span></div>
+      </div>
+    </div>
+    <!-- 7 -->
+    <div class="trend-card" onclick="window.location.href='analyze.html'">
+      <div class="tc-thumb" style="background:linear-gradient(160deg,#191c1a,#232826)">
+        <div class="tc-thumb-emoji">🤖</div>
+        <div class="tc-top">
+          <div class="tc-plat"><div class="tc-plat-dot dot-tt"></div>TikTok</div>
+          <div class="tc-right">
+            <div class="tc-fav" onclick="event.stopPropagation();toggleFav(this)">♡</div>
+            <div class="tc-rank">7</div>
+          </div>
+        </div>
+        <div class="tc-bottom"><div class="tc-views">445К</div><div class="tc-time">4 дн. назад</div></div>
+        <div class="tc-xf">87.5×</div>
+      </div>
+      <div class="tc-overlay"><button class="tc-overlay-btn">Разобрать →</button></div>
+      <div class="tc-info">
+        <div class="tc-info-row"><div class="tc-author">@ai_insider</div><div class="tc-niche">Tech & AI</div></div>
+        <div class="tc-cr"><span class="tc-cr-val">0.0% CR</span><span class="tc-xf-badge">87.5×</span></div>
+      </div>
+    </div>
+    <!-- 8 LOCKED -->
+    <div class="trend-card">
+      <div class="tc-locked">
+        <div class="tc-lock-ico">🔒</div>
+        <div class="tc-lock-text">Зарегистрируйся, чтобы видеть все тренды</div>
+        <a href="login.html" class="tc-lock-cta">Начать бесплатно →</a>
+      </div>
+      <div class="tc-info">
+        <div class="tc-info-row"><div class="tc-author" style="color:var(--text2)">···</div><div class="tc-niche">Бьюти</div></div>
+        <div class="tc-cr"><span class="tc-cr-val">1.2М · 1 дн. назад</span></div>
+      </div>
     </div>
   </div>
 </div>
@@ -196,7 +345,7 @@
 <footer class="footer">
   <div class="footer-logo">REEL<em>X</em></div>
   <div class="footer-links">
-    <a href="pricing.html">Тарифы</a><a href="#">Оферта</a><a href="#">Конфиденциальность</a><a href="#">Возврат</a><a href="#">Куки</a><a href="mailto:support@reelx.app">support@reelx.app</a></div><div class="footer-copy">© 2025 REELX · ИП</div></footer><script src="shared.js"></script>
+    <a href="pricing.html">Тарифы</a><a href="#">Оферта</a><a href="#">Конфиденциальность</a><a href="#">Возврат</a><a href="#">Куки</a>dflare-static/email-decode.min.js"></script><script src="shared.js"></script>
 <script>
 (function() {
   var nr = document.getElementById('nav-right-pub');
@@ -207,130 +356,6 @@
     nr.innerHTML = '<a href="login.html" class="btn btn-ghost btn-sm">Войти</a><a href="login.html" class="btn btn-primary btn-sm">Начать бесплатно</a>';
   }
 })();
-</script>
-<script>
-var currentPlatform = 'all';
-var currentSort = 'xfactor';
-var currentNiche = 'all';
-
-function getPlatIcon(platform) {
-  if (platform === 'instagram') return '<div class="tc-plat-dot dot-ig"></div>Instagram';
-  if (platform === 'tiktok') return '<div class="tc-plat-dot dot-tt"></div>TikTok';
-  if (platform === 'youtube') return '<div class="tc-plat-dot dot-yt"></div>YouTube';
-  return platform;
-}
-
-function getNicheLabel(niche) {
-  var map = {
-    'бизнес': 'Бизнес', 'бьюти': 'Бьюти', 'фитнес': 'Фитнес',
-    'еда': 'Еда', 'психология': 'Психология', 'мода': 'Мода',
-    'tech': 'Tech & AI', 'путешествия': 'Путешествия', 'юмор': 'Юмор',
-    'lifestyle': 'Lifestyle'
-  };
-  return map[niche] || niche || 'Lifestyle';
-}
-
-function getBg(platform) {
-  if (platform === 'instagram') return 'linear-gradient(160deg,#1a1520,#251830)';
-  if (platform === 'tiktok') return 'linear-gradient(160deg,#1c1a1a,#282424)';
-  return 'linear-gradient(160deg,#191c1a,#232826)';
-}
-
-function getEmoji(niche) {
-  var map = {
-    'бизнес':'💰','бьюти':'💄','фитнес':'💪','еда':'🍕',
-    'психология':'🧠','мода':'👗','tech':'🤖','путешествия':'✈️',
-    'юмор':'😂','lifestyle':'✨'
-  };
-  return map[niche] || '🎯';
-}
-
-function renderTrends(items) {
-  var grid = document.getElementById('trends-grid');
-  if (!items || items.length === 0) {
-    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:60px 0;color:var(--text2);font-size:0.85rem;">Тренды обновляются… Попробуй позже.</div>';
-    return;
-  }
-
-  grid.innerHTML = items.map(function(item, i) {
-    var cr = item.view_count > 0 ? ((item.like_count / item.view_count) * 100).toFixed(1) : '0.0';
-    var thumb = item.thumbnail_url ? '<img src="' + item.thumbnail_url + '" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0">' : '';
-    var analyzeUrl = isLoggedIn() ? 'analyze.html' : 'login.html';
-    
-    return '<div class="trend-card" onclick="window.location.href=\'' + analyzeUrl + '?url=' + encodeURIComponent(item.url) + '\'">' +
-      '<div class="tc-thumb" style="background:' + getBg(item.platform) + ';position:relative;">' +
-        thumb +
-        '<div class="tc-thumb-emoji" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);opacity:0.3;">' + getEmoji(item.niche) + '</div>' +
-        '<div class="tc-top">' +
-          '<div class="tc-plat">' + getPlatIcon(item.platform) + '</div>' +
-          '<div class="tc-right">' +
-            '<div class="tc-fav" onclick="event.stopPropagation();toggleFav(this)">♡</div>' +
-            '<div class="tc-rank">' + (i + 1) + '</div>' +
-          '</div>' +
-        '</div>' +
-        '<div class="tc-bottom">' +
-          '<div class="tc-views">' + formatNumber(item.view_count) + '</div>' +
-          '<div class="tc-time">' + timeAgo(item.scraped_at) + '</div>' +
-        '</div>' +
-        '<div class="tc-xf">' + item.xfactor + '×</div>' +
-      '</div>' +
-      '<div class="tc-overlay"><button class="tc-overlay-btn">Разобрать →</button></div>' +
-      '<div class="tc-info">' +
-        '<div class="tc-info-row"><div class="tc-author">@' + (item.author || 'unknown') + '</div><div class="tc-niche">' + getNicheLabel(item.niche) + '</div></div>' +
-        '<div class="tc-cr"><span class="tc-cr-val">' + cr + '% CR</span><span class="tc-xf-badge">' + item.xfactor + '×</span></div>' +
-      '</div>' +
-    '</div>';
-  }).join('');
-}
-
-async function loadTrends() {
-  var grid = document.getElementById('trends-grid');
-  grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:60px 0;color:var(--text2);font-size:0.85rem;">Загружаем тренды…</div>';
-  
-  try {
-    var params = new URLSearchParams({
-      platform: currentPlatform,
-      sort: currentSort,
-      niche: currentNiche,
-      limit: 20
-    });
-    var res = await fetch(API_URL + '/api/trends/feed?' + params);
-    var data = await res.json();
-    renderTrends(data);
-  } catch(e) {
-    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:60px 0;color:var(--text2);">Ошибка загрузки</div>';
-  }
-}
-
-// Platform filter buttons
-document.querySelectorAll('.filters-bar .f-btn').forEach(function(btn) {
-  btn.addEventListener('click', function() {
-    var txt = btn.textContent.trim();
-    if (txt === '📷') currentPlatform = 'instagram';
-    else if (txt === '♪') currentPlatform = 'tiktok';
-    else if (txt === '▶') currentPlatform = 'youtube';
-    else if (txt === 'Все') currentPlatform = 'all';
-    loadTrends();
-  });
-});
-
-// Sort buttons
-document.querySelectorAll('.sort-group .f-btn').forEach(function(btn) {
-  btn.addEventListener('click', function() {
-    var txt = btn.textContent.trim();
-    if (txt === 'X-factor' || txt === 'Горячее') currentSort = 'xfactor';
-    else if (txt === 'Просмотры') currentSort = 'views';
-    else if (txt === 'Свежие') currentSort = 'recent';
-    loadTrends();
-  });
-});
-
-function toggleFav(el) {
-  el.classList.toggle('liked');
-  el.textContent = el.classList.contains('liked') ? '♥' : '♡';
-}
-
-loadTrends();
 </script>
 </body>
 </html>

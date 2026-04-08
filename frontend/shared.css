@@ -5,7 +5,7 @@ html{scroll-behavior:smooth;}
   --bg:#0c0c0e;--bg1:#111114;--bg2:#17171b;--bg3:#1e1e23;--bg4:#26262c;
   --line:rgba(255,255,255,0.07);--line2:rgba(255,255,255,0.11);
   --text:#edeae2;--text2:#68645e;--text3:#9a958f;
-  --ap:#cfc0b0;--ahl:#e8ddd2;--ag:rgba(207,192,176,0.10);
+  --ap:#cfc0b0;--ahl:#e8ddd2;--ag:rgba(207,192,176,0.10);--ab:rgba(207,192,176,0.25);
 }
 body{background:var(--bg);color:var(--text);font-family:'Instrument Sans',sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
 ::-webkit-scrollbar{width:3px;}::-webkit-scrollbar-track{background:var(--bg);}::-webkit-scrollbar-thumb{background:var(--ap);border-radius:2px;}

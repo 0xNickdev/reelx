@@ -39,6 +39,14 @@ function getCurrentUserId() { return localStorage.getItem('reelx_user_id'); }
 function getCurrentToken() { return localStorage.getItem('reelx_token'); }
 function isLoggedIn() { return !!localStorage.getItem('reelx_user_id'); }
 
+
+function getAuthHeaders() {
+  var token = getCurrentToken();
+  var headers = { 'Content-Type': 'application/json' };
+  if (token) headers['Authorization'] = 'Bearer ' + token;
+  return headers;
+}
+
 function requireAuth() {
   if (!isLoggedIn()) {
     window.location.href = 'login.html';
@@ -70,7 +78,6 @@ async function apiLogin(email, password) {
   localStorage.setItem('reelx_user_id', data.user_id);
   localStorage.setItem('reelx_token', data.access_token);
   localStorage.setItem('reelx_email', data.email);
-  if (data.name) localStorage.setItem('reelx_name', data.name);
   return data;
 }
 
@@ -95,7 +102,9 @@ async function apiStartAnalysis(url) {
 }
 
 async function apiGetJobStatus(jobId) {
-  var res = await fetch(API_URL + '/api/analyze/status/' + jobId);
+  var res = await fetch(API_URL + '/api/analyze/status/' + jobId, {
+    headers: getAuthHeaders()
+  });
   if (!res.ok) throw new Error('Job not found');
   return res.json();
 }
@@ -114,19 +123,25 @@ function pollJob(jobId, onProgress, onDone, onError) {
 
 async function apiGetHistory() {
   var userId = getCurrentUserId();
-  var res = await fetch(API_URL + '/api/analyze/history/' + userId);
+  var res = await fetch(API_URL + '/api/analyze/history/' + userId, {
+    headers: getAuthHeaders()
+  });
   return res.json();
 }
 
 async function apiGetSubscription() {
   var userId = getCurrentUserId();
-  var res = await fetch(API_URL + '/api/payments/subscription/' + userId);
+  var res = await fetch(API_URL + '/api/payments/subscription/' + userId, {
+    headers: getAuthHeaders()
+  });
   return res.json();
 }
 
 async function apiGetSettings() {
   var userId = getCurrentUserId();
-  var res = await fetch(API_URL + '/api/settings/' + userId);
+  var res = await fetch(API_URL + '/api/settings/' + userId, {
+    headers: getAuthHeaders()
+  });
   return res.json();
 }
 
