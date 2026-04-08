@@ -239,6 +239,14 @@ setInterval(function() {
 
 function startAnalyze() {
   var url = document.getElementById('hero-url').value.trim();
-  if (!url) { document
+  if (!url) { document.getElementById('hero-url').focus(); return; }
+  if (isLoggedIn()) {
+    localStorage.setItem('reelx_analyze_url', url);
+    window.location.href = 'dashboard.html';
+  } else {
+    window.location.href = 'login.html';
+  }
+}
+</script>
 </body>
 </html>
