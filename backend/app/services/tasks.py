@@ -1,7 +1,3 @@
-"""
-app/services/tasks.py
-Celery tasks including viral feed scraping every 2 hours
-"""
 from app.services.celery_app import celery_app
 from app.services.pipeline import run_pipeline
 from app.core.database import get_supabase_admin
@@ -10,6 +6,9 @@ from app.core.database import get_supabase_admin
 def run_analysis_task(job_id: str, url: str, user_id: str, user_settings: dict = None):
     run_pipeline(job_id, url, user_id, user_settings)
 
+# Alias for backward compatibility
+analyze_video_task = run_analysis_task
+
 @celery_app.task(name="scrape_trends")
 def scrape_trends_task():
     from app.services.trends_scraper import run_full_scrape
@@ -17,7 +16,6 @@ def scrape_trends_task():
 
 # Celery beat schedule - every 2 hours
 from celery.schedules import crontab
-
 celery_app.conf.beat_schedule = {
     "scrape-trends-every-2h": {
         "task": "scrape_trends",
