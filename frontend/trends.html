@@ -196,7 +196,7 @@
 <footer class="footer">
   <div class="footer-logo">REEL<em>X</em></div>
   <div class="footer-links">
-    <a href="pricing.html">Тарифы</a><a href="#">Оферта</a><a href="#">Конфиденциальность</a><a href="#">Возврат</a><a href="#">Куки</a>dflare-static/email-decode.min.js"></script><script src="shared.js"></script>
+    <a href="pricing.html">Тарифы</a><a href="#">Оферта</a><a href="#">Конфиденциальность</a><a href="#">Возврат</a><a href="#">Куки</a><a href="mailto:support@reelx.app">support@reelx.app</a></div><div class="footer-copy">© 2025 REELX · ИП</div></footer><script src="shared.js"></script>
 <script>
 (function() {
   var nr = document.getElementById('nav-right-pub');
@@ -257,7 +257,7 @@ function renderTrends(items) {
     var thumb = item.thumbnail_url ? '<img src="' + item.thumbnail_url + '" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0">' : '';
     var analyzeUrl = isLoggedIn() ? 'analyze.html' : 'login.html';
     
-    return '<div class="trend-card" onclick="window.location.href='' + analyzeUrl + '?url=' + encodeURIComponent(item.url) + ''">' +
+    return '<div class="trend-card" onclick="window.location.href=\'' + analyzeUrl + '?url=' + encodeURIComponent(item.url) + '\'">' +
       '<div class="tc-thumb" style="background:' + getBg(item.platform) + ';position:relative;">' +
         thumb +
         '<div class="tc-thumb-emoji" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);opacity:0.3;">' + getEmoji(item.niche) + '</div>' +
