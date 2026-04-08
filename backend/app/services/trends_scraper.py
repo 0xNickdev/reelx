@@ -18,8 +18,8 @@ NICHES = [
 
 # ─── APIFY ACTORS ────────────────────────────────────────
 ACTORS = {
-    "instagram": "apify/instagram-reel-scraper",
-    "tiktok": "clockworks/free-tiktok-scraper",
+    "instagram": "apify/instagram-scraper",
+    "tiktok": "clockworks/tiktok-scraper",
     "youtube": "streamers/youtube-scraper",
 }
 
@@ -84,11 +84,11 @@ def scrape_instagram_reels() -> list:
     hashtags = ["reels", "viral", "trending", "бизнес", "фитнес", "бьюти"]
 
     items = run_apify_actor(
-        "apify/instagram-reel-scraper",
+        "apify/instagram-scraper",
         {
-            "hashtags": hashtags,
+            "directUrls": ["https://www.instagram.com/explore/tags/reels/", "https://www.instagram.com/explore/tags/viral/"],
+            "resultsType": "posts",
             "resultsLimit": 30,
-            "addParentData": False,
         }
     )
 
@@ -126,7 +126,7 @@ def scrape_tiktok_videos() -> list:
     results = []
 
     items = run_apify_actor(
-        "clockworks/free-tiktok-scraper",
+        "clockworks/tiktok-scraper",
         {
             "hashtags": ["viral", "trending", "fyp", "бизнес", "фитнес"],
             "resultsPerPage": 30,
