@@ -18,10 +18,39 @@ NICHES = [
 
 # ─── APIFY ACTORS ────────────────────────────────────────
 ACTORS = {
-    "instagram": "apify/instagram-scraper",
-    "tiktok": "clockworks/tiktok-scraper",
-    "youtube": "streamers/youtube-scraper",
+    "instagram": "apify~instagram-scraper",
+    "tiktok": "clockworks~tiktok-scraper",
+    "youtube": "streamers~youtube-scraper",
 }
+
+
+async def upload_thumbnail(url: str, trend_id: str) -> str:
+    """Download thumbnail and upload to Supabase Storage."""
+    if not url:
+        return ""
+    try:
+        import httpx
+        headers = {
+            "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X) AppleWebKit/605.1.15",
+            "Referer": "https://www.tiktok.com/",
+        }
+        res = httpx.get(url, headers=headers, timeout=10, follow_redirects=True)
+        if res.status_code != 200:
+            return ""
+        
+        db = get_supabase_admin()
+        file_name = f"trends/{trend_id}.jpg"
+        db.storage.from_('frames').upload(
+            path=file_name,
+            file=res.content,
+            file_options={"content-type": "image/jpeg", "upsert": "true"}
+        )
+        public_url = db.storage.from_('frames').get_public_url(file_name)
+        return public_url
+    except Exception as e:
+        print(f"[scraper] thumbnail upload error: {e}")
+        return url  # fallback to original URL
+
 
 def run_apify_actor(actor_id: str, input_data: dict, timeout: int = 120) -> list:
     """Run Apify actor and return results."""
@@ -84,7 +113,7 @@ def scrape_instagram_reels() -> list:
     hashtags = ["reels", "viral", "trending", "бизнес", "фитнес", "бьюти"]
 
     items = run_apify_actor(
-        "apify/instagram-scraper",
+        "apify~instagram-scraper",
         {
             "directUrls": ["https://www.instagram.com/explore/tags/reels/", "https://www.instagram.com/explore/tags/viral/"],
             "resultsType": "posts",
@@ -126,7 +155,7 @@ def scrape_tiktok_videos() -> list:
     results = []
 
     items = run_apify_actor(
-        "clockworks/tiktok-scraper",
+        "clockworks~tiktok-scraper",
         {
             "hashtags": ["viral", "trending", "fyp", "бизнес", "фитнес"],
             "resultsPerPage": 30,
@@ -145,9 +174,11 @@ def scrape_tiktok_videos() -> list:
                 "platform": "tiktok",
                 "external_id": item.get("id", ""),
                 "url": item.get("webVideoUrl", ""),
-                "thumbnail_url": (item.get("covers", {}).get("default", "") or 
-                                  item.get("video", {}).get("cover", "") or
-                                  item.get("imagePost", {}).get("images", [{}])[0].get("imageURL", {}).get("urlList", [""])[0] or ""),
+                "thumbnail_url": (
+                    item.get("videoMeta", {}).get("coverUrl", "") or
+                    item.get("videoMeta", {}).get("originCoverUrl", "") or
+                    item.get("covers", {}).get("default", "") or ""
+                ),
                 "author": item.get("authorMeta", {}).get("name", ""),
                 "view_count": views,
                 "like_count": likes,
@@ -170,7 +201,7 @@ def scrape_youtube_shorts() -> list:
     results = []
 
     items = run_apify_actor(
-        "streamers/youtube-scraper",
+        "streamers~youtube-scraper",
         {
             "searchKeywords": ["youtube shorts viral", "shorts trending"],
             "maxResults": 30,
@@ -236,15 +267,29 @@ def _calc_xfactor(views: int, likes: int) -> float:
 
 
 def save_trends_to_db(trends: list):
-    """Save scraped trends to Supabase."""
+    """Save scraped trends to Supabase, uploading thumbnails to Storage."""
     if not trends:
         return
 
+    import asyncio
     db = get_supabase_admin()
     saved = 0
 
     for trend in trends:
         try:
+            # Upload thumbnail to Supabase Storage to avoid CORS
+            ext_id = trend.get("external_id", "")
+            orig_thumb = trend.get("thumbnail_url", "")
+            if orig_thumb and ext_id:
+                try:
+                    loop = asyncio.new_event_loop()
+                    hosted_url = loop.run_until_complete(upload_thumbnail(orig_thumb, ext_id))
+                    loop.close()
+                    if hosted_url:
+                        trend["thumbnail_url"] = hosted_url
+                except Exception as te:
+                    print(f"[scraper] thumb upload failed: {te}")
+
             # Upsert by external_id
             db.table("trends").upsert(
                 trend,

@@ -75,10 +75,11 @@ async function apiLogin(email, password) {
   });
   var data = await res.json();
   if (!res.ok) throw new Error(data.detail || 'Неверный email или пароль');
-  localStorage.setItem('reelx_user_id', data.user_id);
-  localStorage.setItem('reelx_token', data.access_token);
-  localStorage.setItem('reelx_email', data.email);
-  return data;
+localStorage.setItem('reelx_user_id', data.user_id);
+localStorage.setItem('reelx_token', data.access_token);
+localStorage.setItem('reelx_email', data.email);
+if (data.name) localStorage.setItem('reelx_name', data.name);
+return data;
 }
 
 function apiLogout() {
