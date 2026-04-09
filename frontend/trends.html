@@ -150,26 +150,42 @@
   </div>
 
   <!-- FILTERS ROW 1 -->
-  <div class="filters-bar filter-group">
+  <div class="filters-bar">
+
+  <!-- Группа 1: вкладки -->
+  <div class="filter-group" style="display:flex;gap:6px;">
     <button class="f-btn on">Для вас</button>
     <button class="f-btn">Мои авторы</button>
     <button class="f-btn">Все</button>
-    <div class="f-sep"></div>
-    <button class="f-btn on">Все ниши ▾</button>
-    <div class="f-sep"></div>
+  </div>
+  <div class="f-sep"></div>
+
+  <!-- Группа 2: ниши (одна кнопка, можно оставить отдельно) -->
+  <button class="f-btn on">Все ниши ▾</button>
+  <div class="f-sep"></div>
+
+  <!-- Группа 3: платформы -->
+  <div class="filter-group" style="display:flex;gap:6px;">
     <button class="f-btn on" id="plat-all" onclick="setPlatform('all',this)">Все</button>
     <button class="f-btn" id="plat-ig" onclick="setPlatform('instagram',this)">📷 Instagram</button>
     <button class="f-btn" id="plat-tt" onclick="setPlatform('tiktok',this)">♪ TikTok</button>
     <button class="f-btn" id="plat-yt" onclick="setPlatform('youtube',this)">▶ YouTube</button>
-    <div class="f-sep"></div>
-    <button class="f-btn">♡</button>
-    <div class="f-sep"></div>
+  </div>
+  <div class="f-sep"></div>
+
+  <button class="f-btn">♡</button>
+  <div class="f-sep"></div>
+
+  <!-- Группа 4: период -->
+  <div class="filter-group" style="display:flex;gap:6px;">
     <button class="f-btn on">Всё время</button>
     <button class="f-btn">Сегодня</button>
     <button class="f-btn">Неделя</button>
     <button class="f-btn">Месяц</button>
     <button class="f-btn">Год</button>
   </div>
+
+</div>
 
   <!-- FILTERS ROW 2 -->
   <div class="filters-bar2">
@@ -178,10 +194,9 @@
       <input type="text" placeholder="Поиск по авторам или нишам…">
     </div>
     <div class="sort-group filter-group">
-      <button class="f-btn on" onclick="setSort('xfactor',this)">Горячее</button>
-      <button class="f-btn" onclick="setSort('xfactor',this)">X-factor</button>
-      <button class="f-btn" onclick="setSort('views',this)">Просмотры</button>
-      <button class="f-btn" onclick="setSort('recent',this)">Свежие</button>
+     <button class="f-btn on" onclick="setSort('xfactor',this)">X-factor</button>
+<button class="f-btn" onclick="setSort('views',this)">Просмотры</button>
+<button class="f-btn" onclick="setSort('recent',this)">Свежие</button>
     </div>
   </div>
 
@@ -345,7 +360,17 @@
 <footer class="footer">
   <div class="footer-logo">REEL<em>X</em></div>
   <div class="footer-links">
-    <a href="pricing.html">Тарифы</a><a href="#">Оферта</a><a href="#">Конфиденциальность</a><a href="#">Возврат</a><a href="#">Куки</a>dflare-static/email-decode.min.js"></script><script src="shared.js"></script>
+    <a href="pricing.html">Тарифы</a>
+    <a href="#">Оферта</a>
+    <a href="#">Конфиденциальность</a>
+    <a href="#">Возврат</a>
+    <a href="#">Куки</a>
+    <a href="mailto:support@reelx.app">support@reelx.app</a>
+  </div>
+  <div class="footer-copy">© 2025 REELX · ИП</div>
+</footer>
+
+<script src="shared.js"></script>
 <script>
 (function() {
   var nr = document.getElementById('nav-right-pub');

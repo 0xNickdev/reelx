@@ -11,13 +11,9 @@
 .page-title { font-family: 'DM Serif Display', serif; font-size: 2.2rem; }
 .back-link { font-size: 0.82rem; color: var(--text2); text-decoration: none; transition: color 0.2s; display: flex; align-items: center; gap: 6px; }
 .back-link:hover { color: var(--text); }
-
-/* BLOCKS */
 .settings-block { background: var(--bg1); border: 1px solid var(--line); border-radius: 12px; padding: 28px; margin-bottom: 14px; }
 .settings-block-title { font-size: 1rem; font-weight: 600; margin-bottom: 5px; }
 .settings-block-sub { font-size: 0.8rem; color: var(--text2); line-height: 1.5; margin-bottom: 20px; }
-
-/* TG CONNECT BLOCK */
 .tg-block { background: var(--bg1); border: 1px solid var(--line); border-radius: 12px; padding: 36px 28px; margin-bottom: 14px; text-align: center; }
 .tg-block-ico { width: 52px; height: 52px; border-radius: 50%; background: rgba(96,165,250,0.12); border: 1px solid rgba(96,165,250,0.2); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin: 0 auto 18px; }
 .tg-block-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 16px; }
@@ -26,18 +22,13 @@
 .tg-checklist li::before { content: '✓'; color: #60a5fa; font-weight: 600; }
 .tg-btn { display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 24px; background: #2563eb; color: #fff; border: none; border-radius: 10px; font-size: 0.88rem; font-weight: 600; font-family: inherit; cursor: pointer; transition: all 0.2s; }
 .tg-btn:hover { background: #1d4ed8; transform: translateY(-1px); }
-
-/* LANGUAGE */
 .lang-grid { display: grid; grid-template-columns: repeat(5,1fr); gap: 8px; margin-bottom: 10px; }
 .lang-btn { padding: 12px 8px; background: var(--bg2); border: 1px solid var(--line2); border-radius: 8px; cursor: pointer; text-align: center; transition: all 0.2s; font-family: inherit; }
-.lang-btn:hover { border-color: var(--line2); }
 .lang-btn.on { background: var(--ag); border-color: var(--ab); }
 .lang-flag { font-size: 1.3rem; display: block; margin-bottom: 4px; }
 .lang-name { font-size: 0.75rem; color: var(--text2); }
 .lang-btn.on .lang-name { color: var(--ap); }
 .settings-hint { font-size: 0.75rem; color: var(--text2); line-height: 1.5; }
-
-/* AUTO SETUP */
 .auto-block { display: flex; gap: 16px; align-items: flex-start; margin-bottom: 20px; }
 .auto-ico { width: 40px; height: 40px; border-radius: 10px; background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.2); display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
 .auto-txt strong { font-size: 0.9rem; display: block; margin-bottom: 3px; }
@@ -50,53 +41,36 @@
 .auto-input-row button { margin: 5px; padding: 0 18px; background: var(--ahl); color: #0c0c0e; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: 600; font-family: inherit; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
 .auto-input-row button:hover { background: #f5ede5; }
 .auto-note { font-size: 0.73rem; color: var(--text2); margin-top: 8px; }
-
-/* DIVIDER */
 .settings-divider { display: flex; align-items: center; gap: 14px; margin: 20px 0; font-size: 0.72rem; color: var(--text2); letter-spacing: 0.06em; text-transform: uppercase; }
 .settings-divider::before, .settings-divider::after { content: ''; flex: 1; height: 1px; background: var(--line); }
-
-/* FORM FIELDS */
 .field { margin-bottom: 20px; }
 .field-label { font-size: 0.8rem; font-weight: 500; margin-bottom: 5px; display: block; }
 .field-sub { font-size: 0.74rem; color: var(--text2); margin-bottom: 8px; }
 .field-input { width: 100%; background: var(--bg2); border: 1px solid var(--line2); border-radius: 8px; padding: 12px 14px; font-size: 0.85rem; color: var(--text); font-family: inherit; outline: none; transition: border-color 0.2s; resize: vertical; }
 .field-input:focus { border-color: rgba(207,192,176,0.4); }
 .field-input::placeholder { color: var(--text2); }
-
-/* INTERESTS TAGS */
 .interests-wrap { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 8px; }
 .interest-tag { display: flex; align-items: center; gap: 5px; padding: 5px 12px; background: var(--bg2); border: 1px solid var(--line2); border-radius: 20px; font-size: 0.75rem; color: var(--text2); cursor: pointer; transition: all 0.2s; }
 .interest-tag:hover { border-color: rgba(248,113,113,0.4); color: #f87171; }
-.interest-tag.add { color: var(--text3); border-style: dashed; }
 .interest-tag .cnt { font-size: 0.65rem; color: var(--text3); background: var(--bg3); border-radius: 10px; padding: 1px 6px; }
-
-/* STYLE GRID */
 .style-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
 .style-card { padding: 14px; background: var(--bg2); border: 1px solid var(--line2); border-radius: 8px; cursor: pointer; transition: all 0.2s; }
-.style-card:hover { border-color: var(--line2); }
 .style-card.on { background: var(--ag); border-color: var(--ab); }
 .style-card-name { font-size: 0.84rem; font-weight: 500; margin-bottom: 4px; }
 .style-card.on .style-card-name { color: var(--ap); }
 .style-card-desc { font-size: 0.73rem; color: var(--text2); line-height: 1.4; }
-
-/* TOGGLE SWITCH */
 .toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; }
 .toggle-label { font-size: 0.85rem; font-weight: 500; }
-.toggle-sub { font-size: 0.75rem; color: var(--text2); margin-top: 2px; }
 .toggle-switch { width: 44px; height: 24px; background: var(--bg3); border-radius: 12px; cursor: pointer; position: relative; transition: background 0.2s; flex-shrink: 0; border: 1px solid var(--line2); }
 .toggle-switch.on { background: var(--ap); border-color: var(--ap); }
 .toggle-switch::after { content: ''; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: #fff; transition: transform 0.2s; }
 .toggle-switch.on::after { transform: translateX(20px); }
-
-/* ADVANCED MODE */
 .advanced-toggle { display: flex; align-items: center; justify-content: space-between; padding: 18px 22px; background: var(--bg2); border: 1px solid var(--line2); border-radius: 10px; cursor: pointer; transition: background 0.2s; margin-bottom: 14px; }
 .advanced-toggle:hover { background: var(--bg3); }
 .advanced-toggle-left strong { font-size: 0.88rem; display: block; margin-bottom: 3px; }
 .advanced-toggle-left span { font-size: 0.75rem; color: var(--text2); }
 .advanced-content { display: none; }
 .advanced-content.show { display: block; }
-
-/* ACCOUNTS */
 .account-row { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid var(--line); }
 .account-row:last-child { border-bottom: none; }
 .account-left { display: flex; align-items: center; gap: 10px; }
@@ -106,25 +80,17 @@
 .account-ico { font-size: 1rem; }
 .account-name { font-size: 0.85rem; font-weight: 500; }
 .account-meta { font-size: 0.74rem; color: var(--text2); }
-
-/* SUBSCRIPTION */
 .sub-status { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
 .sub-status-left { font-size: 0.84rem; color: var(--text2); }
 .sub-status-left strong { color: var(--text); display: block; margin-bottom: 3px; font-size: 0.88rem; }
-
-/* DANGER ZONE */
 .danger-block { background: rgba(248,113,113,0.04); border: 1px solid rgba(248,113,113,0.15); border-radius: 12px; padding: 24px 28px; margin-bottom: 14px; }
 .danger-title { font-size: 1rem; font-weight: 600; color: #f87171; margin-bottom: 6px; }
 .danger-sub { font-size: 0.8rem; color: var(--text2); margin-bottom: 18px; line-height: 1.5; }
 .danger-btn { height: 40px; padding: 0 20px; background: transparent; border: 1px solid rgba(248,113,113,0.4); border-radius: 8px; color: #f87171; font-size: 0.82rem; font-weight: 600; font-family: inherit; cursor: pointer; transition: all 0.2s; }
 .danger-btn:hover { background: rgba(248,113,113,0.08); }
-
-/* SAVE BTN */
 .save-btn { height: 42px; padding: 0 22px; background: var(--ahl); color: #0c0c0e; border: none; border-radius: 8px; font-size: 0.85rem; font-weight: 600; font-family: inherit; cursor: pointer; transition: all 0.2s; }
 .save-btn:hover { background: #f5ede5; transform: translateY(-1px); }
 .save-btn:disabled { background: var(--bg3); color: var(--text2); cursor: default; transform: none; }
-
-/* WARNING BAR */
 .warn-bar { background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.2); border-radius: 8px; padding: 12px 16px; font-size: 0.78rem; color: rgba(251,191,36,0.9); margin-bottom: 14px; }
 </style>
 </head>
@@ -176,7 +142,6 @@ function confirmDelete() {
 
 <div class="page">
 
-  <!-- HEADER -->
   <div class="page-header">
     <div class="page-title">Настройки</div>
     <a href="dashboard.html" class="back-link">← Назад</a>
@@ -225,7 +190,6 @@ function confirmDelete() {
     <div class="auto-note">Занимает 3–5 минут. Профиль должен быть публичным.</div>
   </div>
 
-  <!-- DIVIDER -->
   <div class="settings-divider">Детальные настройки</div>
 
   <!-- GENERATION SETTINGS -->
@@ -233,14 +197,12 @@ function confirmDelete() {
     <div class="settings-block-title">Настройка генерации</div>
     <div class="settings-block-sub">Настройте параметры генерации под себя — стиль, аудиторию, призыв к действию</div>
 
-    <!-- About me -->
     <div class="field">
       <label class="field-label">Обо мне и аудитории</label>
       <div class="field-sub">Опишите, кто вы, кто ваша аудитория, какие темы вы освещаете</div>
       <textarea class="field-input" rows="4" placeholder="Опишите себя: кто вы, о чём ваш блог, кто ваша аудитория. Чем подробнее — тем точнее будут сценарии."></textarea>
     </div>
 
-    <!-- Interests -->
     <div class="field">
       <label class="field-label">Ваши интересы</label>
       <div class="field-sub">Темы, определённые из ваших рилсов. Добавляйте и убирайте для точных рекомендаций.</div>
@@ -264,7 +226,6 @@ function confirmDelete() {
       <div class="settings-hint">Автоматически определяются из ваших рилсов. Разбирайте больше рилсов для новых тем.</div>
     </div>
 
-    <!-- Tone -->
     <div class="field">
       <label class="field-label">Тон и стиль</label>
       <div class="style-grid">
@@ -291,28 +252,24 @@ function confirmDelete() {
       </div>
     </div>
 
-    <!-- Script ending -->
     <div class="field">
       <label class="field-label">Концовка сценария</label>
       <div class="field-sub">Фраза, которой заканчивается каждый сценарий</div>
       <input type="text" class="field-input" placeholder="Подписывайся, чтобы не пропустить следующее.">
     </div>
 
-    <!-- Description ending -->
     <div class="field">
       <label class="field-label">Концовка описания</label>
       <div class="field-sub">Призыв к действию в конце описания к рилсу</div>
-      <input type="text" class="field-input" placeholder='Сохрани и отправь тому, кому это нужно → Подписывайся, чтобы не пропустить следующее.'>
+      <input type="text" class="field-input" placeholder="Сохрани и отправь тому, кому это нужно → Подписывайся, чтобы не пропустить следующее.">
     </div>
 
-    <!-- Stop words -->
     <div class="field">
       <label class="field-label">Запрещённые слова</label>
       <div class="field-sub">Слова и фразы, которые не должны появляться в генерации (через запятую)</div>
       <textarea class="field-input" rows="3" placeholder="уничтожил, убийца, революция, это меняет всё, безумный, невероятный, шокирующий, взорвал, потрясающий..."></textarea>
     </div>
 
-    <!-- Video format -->
     <div class="field">
       <label class="field-label">Формат видео</label>
       <div class="style-grid">
@@ -342,13 +299,9 @@ function confirmDelete() {
   <div class="settings-block">
     <div class="settings-block-title">Радар контента</div>
     <div class="settings-block-sub">Получайте уведомления в Telegram, когда рилсы залетают в ваших нишах</div>
-
     <div class="warn-bar">✈️ Привяжите Telegram для получения уведомлений</div>
-
     <div class="toggle-row">
-      <div>
-        <div class="toggle-label">Уведомления о трендах</div>
-      </div>
+      <div><div class="toggle-label">Уведомления о трендах</div></div>
       <div class="toggle-switch" onclick="this.classList.toggle('on')"></div>
     </div>
   </div>
@@ -364,7 +317,6 @@ function confirmDelete() {
     </div>
     <div class="advanced-content" id="adv-content">
       <div style="padding:0 24px 24px;">
-        <!-- Content instruction -->
         <div style="border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-bottom:12px;">
           <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--line);">
             <div style="display:flex;align-items:center;gap:8px;">
@@ -379,7 +331,6 @@ function confirmDelete() {
             <button class="save-btn" style="margin-top:12px;" onclick="showToast('Сохранено ✓')">Сохранить</button>
           </div>
         </div>
-        <!-- Strategy instruction -->
         <div style="border:1px solid var(--line);border-radius:10px;overflow:hidden;">
           <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--line);">
             <div style="display:flex;align-items:center;gap:8px;">
@@ -419,7 +370,7 @@ function confirmDelete() {
         <div class="account-ico">✉️</div>
         <div>
           <div class="account-name">Email</div>
-          <div class="account-meta"><a href="/cdn-cgi/l/email-protection#c7b4b2b7b7a8b5b387b5a2a2abbfe9a6b7b7"><span class="__cf_email__" data-cfemail="7a090f0a0a15080e3a081f1f1602541b0a0a">[email&#160;protected]</span></a></div>
+          <div class="account-meta" id="account-email">—</div>
         </div>
       </div>
       <span style="font-size:0.74rem;color:#4ade80;">Привязан</span>
@@ -449,29 +400,54 @@ function confirmDelete() {
 <footer class="footer">
   <div class="footer-logo">REEL<em>X</em></div>
   <div class="footer-links">
-    <a href="pricing.html">Тарифы</a><a href="#">Оферта</a><a href="#">Конфиденциальность</a><a href="#">Возврат</a><a href="#">Куки</a><a href="/cdn-cgi/l/email-protection#1764626767786563576572727b6f39766767"><span class="__cf_email__" data-cfemail="6d1e181d1d021f192d1f08080115430c1d1d">[email&#160;protected]</span></a>
+    <a href="pricing.html">Тарифы</a>
+    <a href="#">Оферта</a>
+    <a href="#">Конфиденциальность</a>
+    <a href="#">Возврат</a>
+    <a href="#">Куки</a>
+    <a href="mailto:support@reelx.app">support@reelx.app</a>
   </div>
   <div class="footer-copy">© 2025 REELX · ИП</div>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="shared.js"></script>
-
-</body>
-</html>
+<script src="shared.js"></script>
 <script>
 if (!isLoggedIn()) { window.location.href = 'login.html'; }
+
+// Показываем email пользователя при загрузке страницы
+var emailEl = document.getElementById('account-email');
+if (emailEl) emailEl.textContent = localStorage.getItem('reelx_email') || '—';
+
 function saveSettings() {
   var btn = document.querySelector('.save-btn');
   btn.textContent = 'Сохраняем…';
   btn.disabled = true;
+
   var aboutEl = document.querySelector('textarea[placeholder*="Опишите"]');
-  var endingEl = document.querySelector('input[placeholder*="Подписывайся"]');
+  var scriptEndingEl = document.querySelector('input[placeholder*="Подписывайся"]');
+  var descEndingEl = document.querySelector('input[placeholder*="Сохрани"]');
   var stopEl = document.querySelector('textarea[placeholder*="уничтожил"]');
+
+  var langBtn = document.querySelector('.lang-btn.on .lang-name');
+  var language = langBtn ? langBtn.textContent.trim() : 'Русский';
+
+  var toneGrids = document.querySelectorAll('.style-grid');
+  var toneCard = toneGrids[0] ? toneGrids[0].querySelector('.style-card.on .style-card-name') : null;
+  var tone = toneCard ? toneCard.textContent.trim() : '';
+
+  var formatCard = toneGrids[1] ? toneGrids[1].querySelector('.style-card.on .style-card-name') : null;
+  var video_format = formatCard ? formatCard.textContent.trim() : '';
+
   var settings = {
-    about_me: aboutEl ? aboutEl.value : '',
-    script_ending: endingEl ? endingEl.value : '',
-    stop_words: stopEl ? stopEl.value : '',
+    about_me:      aboutEl ? aboutEl.value : '',
+    script_ending: scriptEndingEl ? scriptEndingEl.value : '',
+    desc_ending:   descEndingEl ? descEndingEl.value : '',
+    stop_words:    stopEl ? stopEl.value : '',
+    language:      language,
+    tone:          tone,
+    video_format:  video_format,
   };
+
   apiSaveSettings(settings).then(function() {
     showToast('Настройки сохранены ✓');
     btn.textContent = 'Сохранить';
