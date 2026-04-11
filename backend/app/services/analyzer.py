@@ -132,9 +132,9 @@ USER SETTINGS:
     ]) if frames else "No frame data available"
 
     # Format meta
-    views = video_meta.get("view_count", 0)
-    likes = video_meta.get("like_count", 0)
-    duration = video_meta.get("duration", 0)
+    views = video_meta.get("view_count", 0) or 0
+    likes = video_meta.get("like_count", 0) or 0
+    duration = video_meta.get("duration", 0) or 0
     platform = video_meta.get("platform", "Unknown")
     uploader = video_meta.get("uploader", "Unknown")
 
