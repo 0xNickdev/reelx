@@ -417,6 +417,7 @@ if (!isLoggedIn()) { window.location.href = 'login.html'; }
 // Показываем email пользователя при загрузке страницы
 var emailEl = document.getElementById('account-email');
 if (emailEl) emailEl.textContent = localStorage.getItem('reelx_email') || '—';
+document.querySelector('.tg-btn').addEventListener('click', linkTelegram);
 
 function saveSettings() {
   var btn = document.querySelector('.save-btn');
