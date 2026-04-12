@@ -2,6 +2,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.api import analyze, auth, settings_api, payments, trends, admin
+from fastapi import Request
+from app.core.database import get_supabase_admin
 
 app = FastAPI(
     title="REELX API",
@@ -18,7 +20,6 @@ app.add_middleware(
         "http://localhost:8080",
         "https://reelx.app",
         "https://www.reelx.app",
-        "*",  # Remove in production
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -40,3 +41,37 @@ async def root():
 @app.get("/health")
 async def health():
     return {"status": "healthy"}
+
+import secrets
+from datetime import datetime, timedelta
+
+@app.post(f"/api/telegram/webhook")
+async def telegram_webhook(request: Request):
+    """Receives updates from Telegram."""
+    from app.services.telegram_bot import handle_update
+    data = await request.json()
+    await handle_update(data)
+    return {"ok": True}
+
+@app.post("/api/telegram/link")
+async def generate_link_token(request: Request):
+    """Generate one-time token for Telegram account linking."""
+    data = await request.json()
+    user_id = data.get("user_id")
+    if not user_id:
+        from fastapi import HTTPException
+        raise HTTPException(400, "user_id required")
+
+    token = secrets.token_urlsafe(32)
+    db_client = get_supabase_admin()
+    db_client.table("telegram_link_tokens").insert({
+        "token": token,
+        "user_id": user_id,
+        "expires_at": (datetime.utcnow() + timedelta(minutes=10)).isoformat(),
+    }).execute()
+
+    bot_username = "ReelXapp_bot"  
+    return {
+        "token": token,
+        "url": f"https://t.me/{bot_username}?start={token}"
+    }
