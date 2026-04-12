@@ -5,7 +5,6 @@ import tempfile
 
 # Path to Instagram cookies file
 COOKIES_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'instagram_cookies.txt')
-print(f"[downloader] cookies path: {COOKIES_FILE}, exists: {os.path.exists(COOKIES_FILE)}")
 
 def download_video(url: str) -> dict:
     output_dir = tempfile.mkdtemp(prefix='reelx_')
