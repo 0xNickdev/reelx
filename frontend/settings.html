@@ -457,8 +457,9 @@ function saveSettings() {
     btn.textContent = 'Сохранить';
     btn.disabled = false;
   });
+}  // конец saveSettings
 
-  function linkTelegram() {
+function linkTelegram() {
   var userId = localStorage.getItem('reelx_user_id');
   if (!userId) { showToast('Войди в аккаунт', 'error'); return; }
 
@@ -478,7 +479,6 @@ function saveSettings() {
   .catch(function() {
     showToast('Ошибка подключения', 'error');
   });
-}
 }
 </script>
 </body>
