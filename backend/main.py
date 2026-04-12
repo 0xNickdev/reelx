@@ -45,12 +45,14 @@ async def health():
 import secrets
 from datetime import datetime, timedelta
 
-@app.post(f"/api/telegram/webhook")
-async def telegram_webhook(request: Request):
-    """Receives updates from Telegram."""
+import asyncio
+from fastapi.background import BackgroundTasks
+
+@app.post("/api/telegram/webhook")
+async def telegram_webhook(request: Request, background_tasks: BackgroundTasks):
     from app.services.telegram_bot import handle_update
     data = await request.json()
-    await handle_update(data)
+    background_tasks.add_task(handle_update, data)
     return {"ok": True}
 
 @app.post("/api/telegram/link")
