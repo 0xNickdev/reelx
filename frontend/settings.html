@@ -157,7 +157,7 @@ function confirmDelete() {
       <li>Запускай анализ прямо из Telegram</li>
       <li>Не нужно открывать сайт — всё в чате</li>
     </ul>
-    <button class="tg-btn">✈️ Подключить Telegram</button>
+    <button class="tg-btn" onclick="linkTelegram()">✈️ Подключить Telegram</button>
   </div>
 
   <!-- LANGUAGE -->
@@ -457,6 +457,28 @@ function saveSettings() {
     btn.textContent = 'Сохранить';
     btn.disabled = false;
   });
+
+  function linkTelegram() {
+  var userId = localStorage.getItem('reelx_user_id');
+  if (!userId) { showToast('Войди в аккаунт', 'error'); return; }
+
+  fetch('https://reelx-production.up.railway.app/api/telegram/link', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ user_id: userId })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    if (data.url) {
+      window.open(data.url, '_blank');
+    } else {
+      showToast('Ошибка генерации ссылки', 'error');
+    }
+  })
+  .catch(function() {
+    showToast('Ошибка подключения', 'error');
+  });
+}
 }
 </script>
 </body>
