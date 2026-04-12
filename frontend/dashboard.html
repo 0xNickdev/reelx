@@ -146,24 +146,7 @@
     <div class="dash-head-title">Горячие тренды сейчас</div>
     <a href="trends.html" class="dash-head-link">Все тренды →</a>
   </div>
-  <div class="trends-mini">
-    <div class="tm-card" onclick="window.location.href='trends.html'">
-      <div class="tm-thumb" style="background:linear-gradient(160deg,#1a1520,#251830)">🚗<div class="tm-xf">363×</div></div>
-      <div class="tm-info"><div class="tm-author">@nikita.vell</div><div class="tm-meta">1.1М · 3 дн. назад</div></div>
-    </div>
-    <div class="tm-card" onclick="window.location.href='trends.html'">
-      <div class="tm-thumb" style="background:linear-gradient(160deg,#1c1a1a,#282424)">💄<div class="tm-xf">301×</div></div>
-      <div class="tm-info"><div class="tm-author">@viktoria_hudeem</div><div class="tm-meta">61.4К · 12 ч. назад</div></div>
-    </div>
-    <div class="tm-card" onclick="window.location.href='trends.html'">
-      <div class="tm-thumb" style="background:linear-gradient(160deg,#191c1a,#232826)">💪<div class="tm-xf">184×</div></div>
-      <div class="tm-info"><div class="tm-author">@nikita.vell</div><div class="tm-meta">559К · 3 дн. назад</div></div>
-    </div>
-    <div class="tm-card" onclick="window.location.href='trends.html'">
-      <div class="tm-thumb" style="background:var(--bg2);font-size:0.72rem;color:var(--text2);text-align:center;padding:0 10px;">Все тренды →</div>
-      <div class="tm-info"><div class="tm-author" style="color:var(--text2)">Viral Feed</div><div class="tm-meta">Обновляется каждые 2ч</div></div>
-    </div>
-  </div>
+  <div class="trends-mini" id="trends-mini"></div>
 </div>
 
 <footer class="footer">
@@ -274,30 +257,51 @@ document.getElementById('dash-url').addEventListener('keydown', function(e) {
   if (e.key === 'Enter') startAnalyze();
 });
 
-// ── LOAD ALL DATA ────────────────────────────────────────
 async function loadDashboard() {
   try {
-    // Load subscription
     var sub = await apiGetSubscription();
     var isPaid = sub && sub.status === 'active';
 
-    // Load history
     var history = await apiGetHistory();
     var total = history ? history.length : 0;
     var done = history ? history.filter(function(h) { return h.status === 'done'; }).length : 0;
 
-    // Update stats
     document.getElementById('stat-total').textContent = total;
     document.getElementById('stat-done').textContent = done;
     updateTrialUI(total, isPaid);
 
-    // Render history
-    renderHistory(history);  } catch(e) {
+    renderHistory(history);
+  } catch(e) {
     console.error('Dashboard load error:', e);
     document.getElementById('stat-total').textContent = '0';
     document.getElementById('stat-done').textContent = '0';
     updateTrialUI(0, false);
   }
+
+  // Load mini trends — всегда, не только при ошибке
+  apiGetTrends(null, 'all', 'xfactor').then(function(data) {
+    if (!data || !data.length) return;
+    var html = data.slice(0, 3).map(function(v) {
+      var xf = v.xfactor ? v.xfactor.toFixed(0) + '×' : '';
+      var thumb = v.thumbnail_url
+        ? '<img src="' + v.thumbnail_url + '" style="width:100%;height:100%;object-fit:cover;" loading="lazy">'
+        : '🎬';
+      var analyzeUrl = 'analyze.html?url=' + encodeURIComponent(v.url);
+      return '<div class="tm-card" onclick="window.location.href=\'' + analyzeUrl + '\'">' +
+        '<div class="tm-thumb" style="background:var(--bg2);padding:0;position:relative;">' +
+          thumb +
+          '<div class="tm-xf">' + xf + '</div>' +
+        '</div>' +
+        '<div class="tm-info"><div class="tm-author">@' + (v.author || '') + '</div>' +
+        '<div class="tm-meta">' + formatNumber(v.view_count) + ' · ' + timeAgo(v.scraped_at) + '</div></div>' +
+      '</div>';
+    }).join('') +
+    '<div class="tm-card" onclick="window.location.href=\'trends.html\'">' +
+      '<div class="tm-thumb" style="background:var(--bg2);font-size:0.72rem;color:var(--text2);text-align:center;padding:0 10px;">Все тренды →</div>' +
+      '<div class="tm-info"><div class="tm-author" style="color:var(--text2)">Viral Feed</div><div class="tm-meta">Обновляется каждые 2ч</div></div>' +
+    '</div>';
+    document.getElementById('trends-mini').innerHTML = html;
+  }).catch(function(e) { console.error('trends-mini error:', e); });
 }
 
 // Attach button listener
